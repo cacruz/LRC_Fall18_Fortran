@@ -1,0 +1,56 @@
+Day 1: Fortran 90/95
+
+    08:45-9:45 Introductory remarks and setup (Carlos)
+               Brief introduction
+               Compiler description
+               Building programs using GMake
+               Example of a program unit and generation of executable
+    09:45:10:00 Break
+    10:00-11:00 Variables and data types (Jules)
+                Operators
+                Number kinds and precision
+                Example
+                Exercise
+    11:00-12:00 Conditionals and loops (Bruce)
+                Branching with if-blocks
+                Select case
+                Loops
+                Example
+                Exercise
+    12:00-13:00 Lunch Break
+    13:00-14:00 Array concepts (Carlos)
+                Array declaration and initialization
+                Working with arrays (slicing)
+                Example
+                Exercise
+    14:00-15:00 Subroutines and functions (Jules)
+                Subroutines (argument passing and intent)
+                Functions
+                Example
+                Exercise    
+    15:00-15:15 Break
+    15:15-15:45 Modules and interfaces (Bruce)
+                Modules
+                Interfaces
+                Overloading procedures
+                Example
+                Exercise
+    15:45-16:15 File IO (Bruce)
+                Formatted and unformatted file IO
+                Example
+                Exercise
+                
+Day 2: Modern Fortran
+
+    08:45-10:00 Derived types and pointers (Bruce)
+                User defined types
+                Pointers (differences with allocatable arrays)
+    10:00-10:15 Break
+    10:15-11:15 Introduction to OOP (Carlos)
+    11:15-12:15 Information Hiding (Jules)
+    12:15-13:15 Lunch Break
+    13:15-14:00 Inheritance (Carlos)
+    14:00-15:00 Polymorphism (Jules)
+    15:00-15:15 Break
+    15:15-15:45 Procedure pointers (Carlos)
+    15:45-16:15 Interoperability with C (Jules)
