@@ -1,0 +1,140 @@
+\documentclass[11pt]{beamer}
+\setbeamertemplate{navigation symbols}{}
+ \setbeamercovered{transparent}
+\usepackage{listings}
+%\usetheme{Copenhagen}
+\usetheme{Singapore}
+%\usetheme{Madrid}
+%\usetheme{Hannover}
+%\usetheme{boxes}
+%\usetheme{Boadilla}
+\usefonttheme[onlymath]{serif}
+\usecolortheme{beaver}
+\usepackage{textpos}
+
+\newcommand\FontAcolumn{\fontsize{6}{7.2}\selectfont}
+\newcommand\FontBcolumn{\fontsize{8}{7.2}\selectfont}
+\newcommand\FontCcolumn{\fontsize{10}{7.2}\selectfont}
+\newcommand\FontDcolumn{\fontsize{11}{7.2}\selectfont}
+
+\definecolor{gray97}{gray}{.97}
+\definecolor{gray75}{gray}{.75}
+\definecolor{gray75}{gray}{.45}
+
+\lstdefinestyle{Fortran}{language=[90]Fortran}
+
+\newcommand\FortranStyle
+{
+\lstset{
+frame=Ltb,
+framerule=0pt,
+columns=fullflexible,
+aboveskip=0.5cm,
+framextopmargin=3pt,
+framexbottommargin=3pt,
+framexleftmargin=0.4cm,
+framesep=0pt,
+rulesep=.4pt,
+backgroundcolor=\color{gray97},
+rulesepcolor=\color{black},
+stringstyle=\ttfamily,
+showstringspaces=false,
+basicstyle=\ttfamily,
+commentstyle=\color{green},
+keywordstyle=\color{red},
+numbers=left,
+numbersep=15pt,
+numberstyle=\tiny,
+numberfirstline=false,
+breaklines=true,
+ tabsize=2,
+ extendedchars=true,
+keepspaces,
+}
+}
+
+\newcommand\FortranStyleA
+{
+\lstset{
+frame=Ltb,
+framerule=0pt,
+columns=fullflexible,
+aboveskip=0.5cm,
+framextopmargin=3pt,
+framexbottommargin=3pt,
+framexleftmargin=0.4cm,
+framesep=0pt,
+rulesep=.4pt,
+backgroundcolor=\color{gray97},
+rulesepcolor=\color{black},
+stringstyle=\ttfamily,
+showstringspaces=false,
+basicstyle=\ttfamily,
+commentstyle=\color{green},
+keywordstyle=\color{red},
+numbersep=15pt,
+numberstyle=\tiny,
+numberfirstline=false,
+breaklines=true,
+ tabsize=2,
+ extendedchars=true,
+keepspaces,
+}
+}
+
+\def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
+  \hbox{}\nobreak\hfil(#1)%
+  \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}}
+  {\signed{\usebox\mybox}\end{quote}}
+  
+% items enclosed in square brackets are optional; explanation below
+\title{Arrays}
+%\subtitle{Introduction}
+\author{Carlos Cruz\\
+Jules Kouatchou\\
+Bruce Van Aartsen}
+\institute{
+  NASA GSFC Code 606 (ASTG)\\
+  Greenbelt, Maryland 20771\\[1ex]
+%  \texttt{carlos.a.cruz@nasa.gov}
+}
+\date{October 24, 2018}
+
+\begin{document}
+
+% --- Title page ---
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\logo{%
+  \includegraphics[width=1cm,height=1cm,keepaspectratio]{../../shared/nasa-ball.png}%
+  \hspace{\dimexpr\paperwidth-2cm-5pt}%
+  \includegraphics[width=1cm,height=1cm,keepaspectratio]{../../shared/ssai-logo.png}%
+}
+
+% --- Slide
+
+\begin{frame}{Slide}
+
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}{Example}
+
+\end{frame}
+
+
+% --- Slide
+
+\begin{frame}{Exercise}
+
+\end{frame}
+
+\end{document}
