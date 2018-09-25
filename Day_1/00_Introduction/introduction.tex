@@ -13,7 +13,9 @@
 \usepackage{textpos}
 \usepackage{fancyvrb}
 \usepackage{xcolor}
-
+\usepackage{multicol}
+\usepackage{lipsum}
+\parskip 1ex
 
 \newcommand\FontAcolumn{\fontsize{6}{7.2}\selectfont}
 \newcommand\FontBcolumn{\fontsize{8}{7.2}\selectfont}
@@ -141,7 +143,7 @@ Bruce Van Aartsen}
         \textbf{Day 1}
 
     \begin{itemize}
-        \item Introduction
+        \item \textcolor{red}{Introduction}
         \item Variables and data types
         \item Conditionals and loops
         \item Array concepts
@@ -181,6 +183,11 @@ Bruce Van Aartsen}
   }
   \end{itemize}
   
+    \begin{figure}[t]
+\centering
+\includegraphics[scale=.3]{fortran-card}
+\end{figure}
+
   \item FORTRAN 77
   \begin{itemize}
   \scriptsize{
@@ -188,6 +195,24 @@ Bruce Van Aartsen}
   }
   \end{itemize}
   
+ 
+\end{itemize}
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}{A Brief History of Fortran}
+
+ 
+  
+  \parindent0em
+
+
+\begin{multicols}{2}[\columnsep2em] 
+
+
+\begin{itemize}
   \item Fortran 90 (All caps were dropped)
   \begin{itemize}
   \scriptsize{
@@ -204,6 +229,37 @@ Bruce Van Aartsen}
   }
   \end{itemize}
   
+    \begin{figure}[t]
+\centering
+\includegraphics[scale=.3]{Fortran-90-95}
+\end{figure}
+  
+  
+\end{itemize}
+
+
+\columnbreak
+
+\end{multicols}
+
+
+
+ 
+\end{frame}
+
+% --- Slide
+
+\begin{frame}{A Brief History of Fortran}
+
+
+
+  \parindent0em
+
+
+\begin{multicols}{2}[\columnsep2em] 
+
+\begin{itemize}
+   
   \item Fortran 2003
   \begin{itemize}
   \scriptsize{
@@ -220,7 +276,24 @@ Bruce Van Aartsen}
   
 \end{itemize}
 
+  
+    \begin{figure}[t]
+\centering
+\includegraphics[scale=.25]{oop.jpg}
+\end{figure}
+  
+  
+
+
+\columnbreak
+
+\end{multicols}
+
+
+
+
 \end{frame}
+
 
 
 % --- Slide
@@ -229,9 +302,10 @@ Bruce Van Aartsen}
 % https://arstechnica.com/science/2014/05/scientific-computings-future-can-any-coding-language-top-a-1950s-behemoth/
 
 \begin{itemize}
+\item Legacy code
 \item Expressiveness / ease
  \begin{itemize}
- \item Arrays lie at the heart of all physics calculations
+ \item Arrays lie at the heart of all physics/engineering calculations
  \item Little to worry about pointers and memory allocation
  \begin{itemize}
  \item Variables are usually passed by reference, not by value
@@ -243,17 +317,16 @@ Bruce Van Aartsen}
 \item Parallelism
 \end{itemize}
 
-\item Standards
 % \item It's been \textbf{modernized}
  \end{itemize}
 
 \end{frame}
 
 
-% --- Slide 5 ---
+% --- Slide ---
 
 \begin{frame}[fragile]
-\frametitle{Compiler}
+\frametitle{Fortran is a compiled language}
 
 What is a compiler?
 \vfill
@@ -265,7 +338,7 @@ A compiler is a \textbf{program} that translates source code written in some hig
 
 \end{frame}
 
-% --- Slide 5 ---
+% --- Slide ---
 
 \begin{frame}{Compiler}
 
