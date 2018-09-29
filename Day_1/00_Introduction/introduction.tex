@@ -87,6 +87,9 @@ keepspaces,
 }
 }
 
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\newcommand{\light}[1]{\textcolor{lightgray}{#1}}
+    
 \def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
   \hbox{}\nobreak\hfil(#1)%
   \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
@@ -322,15 +325,45 @@ Bruce Van Aartsen}
 
 \end{frame}
 
+% --- Slide ---
+\begin{frame}[fragile]
+\frametitle{Why Fortran?}
+
+Fortran continues and will continue to be a dominant language for large scale simulation of physical systems.
+\vfill
+\begin{aquote}{John Backus}
+I don't know what the technical characteristics of
+the standard language for scientific and engineering
+computation in the year 2000 will be... but I know it
+will be called Fortran.
+\end{aquote}
+
+\end{frame}
+
+
+% --- Slide ---
+\begin{frame}[fragile]
+\frametitle{}
+
+
+\centering{
+\huge{
+Compiling, Linking and Running Fortran Programs
+}
+}
+
+\end{frame}
+
+
 
 % --- Slide ---
 
 \begin{frame}[fragile]
-\frametitle{Fortran is a compiled language}
+\frametitle{Compilers}
 
-What is a compiler?
+You will need a \textbf{compiler} to produce an executable from Fortran code so that you can...well...execute the program. So, what is a \textbf{compiler}?
 \vfill
-A compiler is a \textbf{program} that translates source code written in some high-level language into low-level machine code. The machine code is generally specific to the computer architecture where it was compiled.
+A compiler is a \textbf{program} that translates source code written in some high-level language -like Fortran - into low-level machine code. The machine code is generally specific to the computer architecture where it was compiled.
 
 % refers to the processing of source code files
 %and the creation of an 'object' file
@@ -338,39 +371,58 @@ A compiler is a \textbf{program} that translates source code written in some hig
 
 \end{frame}
 
+
+
 % --- Slide ---
 
-\begin{frame}{Compiler}
+\begin{frame}{Compilation at a glance}
 
-What does it do?
+How does a compiler translate source code into executable code?
 
 \begin{figure}[t]
 \centering
 \includegraphics[scale=.3]{compiler}
 \end{figure}
 
+\end{frame}
+
+
+\begin{frame}{Some Fortran compiler vendors}
+
+\begin{itemize}
+\item \textcolor{red}{GNU}
+\item IBM
+\item Intel
+\item NAG
+\item PGI
+\end{itemize}
+
+\scriptsize{
+\url{https://en.wikipedia.org/wiki/List_of_compilers\#Fortran_compilers}
+}
 
 \end{frame}
+
 
 % --- Slide
 
-\begin{frame}{Compilation and Linking}
-
-\begin{itemize}
-\item Compilation refers to the processing of source code files and the creation of an 'object' file
-which contains the machine language instructions that correspond to the source code file.
-\begin{itemize}
-\item Compiler errors are usually syntactic in nature.
- \end{itemize}
-
-\item Linking refers to the creation of a single executable file from one or multiple object files
-\begin{itemize}
-\item Linking errors usually have to do with missing or multiple definitions.
- \end{itemize}
-
- \end{itemize}
-
-\end{frame}
+%\begin{frame}{Compilation and Linking}
+%
+%\begin{itemize}
+%\item Compilation refers to the processing of source code files and the creation of an 'object' file
+%which contains the machine language instructions that correspond to the source code file.
+%\begin{itemize}
+%\item Compiler errors are usually syntactic in nature.
+% \end{itemize}
+%
+%\item Linking refers to the creation of a single executable file from one or multiple object files
+%\begin{itemize}
+%\item Linking errors usually have to do with missing or multiple definitions.
+% \end{itemize}
+%
+% \end{itemize}
+%
+%\end{frame}
 
 % --- Slide
 
@@ -405,26 +457,92 @@ end program
 
 \end{frame}
 
+% --- Slide ---
 
-\begin{frame}{Using the compiler}
+\begin{frame}{Using the GNU compiler}
+
+Use \emph{gfortran} command:
 
 \begin{itemize}
-\item gfortran hello.F90
+\item gfortran hello.F90  $\leftarrow$ no \emph{output} name for the executable specified
 \begin{itemize}
-\item ./a.out
+\item ./a.out $\leftarrow$ default output file name
 \end{itemize}
 
- \item gfortran -c hello.F90
+\item \light{gfortran -c hello.F90 $\leftarrow$ compile only - generates \emph{object} file}
+\begin{itemize}
+\item \light{hello.o}
+\end{itemize}
+
+\item \light{gfortran -c hello.F90 -o hello.o $\leftarrow$  same as previous case}
+\begin{itemize}
+\item \light{hello.o}
+\end{itemize}
+
+\item \light{gfortran -o hello.exe hello.F90 $\leftarrow$  compile and link}
+\begin{itemize}
+\item \light{./hello.exe}
+\end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}{Using the GNU compiler}
+
+Use \emph{gfortran} command:
+
+\begin{itemize}
+\item \light{gfortran hello.F90  $\leftarrow$ no \emph{output} name for the executable specified}
+\begin{itemize}
+\item \light{./a.out $\leftarrow$ default output file name}
+\end{itemize}
+
+\item gfortran -c hello.F90 $\leftarrow$ compile only - generates \emph{object} file
 \begin{itemize}
 \item hello.o
 \end{itemize}
 
-\item gfortran -c hello.F90 -o hello.o
+\item gfortran -c hello.F90 -o hello.o $\leftarrow$  same as previous case
 \begin{itemize}
 \item hello.o
 \end{itemize}
 
-\item gfortran -o hello.exe hello.F90
+\item \light{gfortran -o hello.exe hello.F90 $\leftarrow$  compile and link}
+\begin{itemize}
+\item \light{./hello.exe}
+\end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+
+% --- Slide ---
+
+\begin{frame}{Using the GNU compiler}
+
+Use \emph{gfortran} command:
+
+\begin{itemize}
+\item \light{gfortran hello.F90  $\leftarrow$ no \emph{output} name for the executable specified}
+\begin{itemize}
+\item \light{./a.out $\leftarrow$ default output file name}
+\end{itemize}
+
+\item \light{gfortran -c hello.F90 $\leftarrow$ compile only - generates \emph{object} file}
+\begin{itemize}
+\item \light{hello.o}
+\end{itemize}
+
+\item \light{gfortran -c hello.F90 -o hello.o $\leftarrow$  same as previous case}
+\begin{itemize}
+\item \light{hello.o}
+\end{itemize}
+
+\item gfortran -o hello.exe hello.F90 $\leftarrow$  compile and link
 \begin{itemize}
 \item ./hello.exe
 \end{itemize}
@@ -436,52 +554,100 @@ end program
 % --- Slide ---
 
 \begin{frame}[fragile]
-\frametitle{Linking libraries}
-
-\begin{itemize}
-\item Static and dynamic linking
-\begin{itemize}
-\item Static - performed by linker
-\item Dynamic - performed by OS
-\end{itemize}
-\end{itemize}
-
-\end{frame}
-
-% --- Slide ---
-
-\begin{frame}[fragile]
 \frametitle{Libraries}
 
-After compilation we can create a static library using ?ar? (stands for archiver) 
-\begin{Verbatim}
+After compilation we generally want to create a \emph{static} library. For that we use the program "ar" (stands for archiver) as follows:
+\begin{Verbatim} 
 $ gfortran -c *.F90
-$ ar r libmystatlib.a *.o
+$ ar -r libmystatlib.a *.o
 \end{Verbatim}
-Or create a dynamic library...
+one can also create a \emph{dynamic} library...
 \begin{Verbatim}
-$ gfortran -c -fPIC *.F90
+$ gfortran -c -fPIC *.F90  
 $ gfortran -shared -o libmydynlib.so *.o
 \end{Verbatim}
 
 \end{frame}
 
 
+
 % --- Slide ---
 
 \begin{frame}[fragile]
-\frametitle{Make}
-What is "make"?
+\frametitle{Linking}
+
+A linker takes several object files and libraries as input and produces one executable object file. Additionally,
 \begin{itemize}
-\item The make utility is a tool for managing and maintaining computer programs. It is generally used to build executable programs, libraries, and other files.
+\item it resolves all external references
+\item it includes the operating system libraries, the language-specific libraries, and, maybe, user-created libraries. 
+\end{itemize}
+
+\end{frame}
+
+
+
+
+%% --- Slide ---
+%
+%\begin{frame}[fragile]
+%\frametitle{Linking libraries}
+%
+%\begin{itemize}
+%\item Static and dynamic linking
+%\begin{itemize}
+%\item Static - performed by linker
+%\item Dynamic - performed by OS
+%\end{itemize}
+%\end{itemize}
+%
+%\end{frame}
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{make}
+What is \textbf{make}?
+\begin{itemize}
+\item The \textbf{make} utility is a tool for managing and maintaining computer programs. It is generally used to build executable programs, libraries, and other files.
 \item Created at Bell Labs ca. 1977 
-\item The input to make is a file called the makefile
-\item makefile  describes a set of targets, which are the objects that can be made.
+\item The input to make is a file called the \textbf{makefile}.
+\item The \textbf{makefile}  describes a set of targets, which are the objects that can be \textbf{made}.
+\item \textbf{make} is programming language agnostic.
+\item \textbf{make} is one of the most essential tools for programmers.
 \end{itemize}
 Reference: \url{http://www.gnu.org/software/make/}
 
 \end{frame}
 
+% Make is the de-facto tool for building executable programs from source code in the world of open source.
+% Make enables end users to build executable programs without knowing technical details of how to build them
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{The makefile}
+
+\scriptsize{
+The \textbf{makefile} is a collection of \emph{rules}. 
+\begin{itemize}
+\item The rules instruct \textbf{make} how to build a target 
+\item A rule also specifies dependencies of the target. 
+\end{itemize}
+The dependency rules must be executed first depending on whether that is already 
+processed by looking at the time stamps.\\
+\vspace{5mm}
+Rule syntax:\\
+\vspace{5mm}
+\emph{target}: \emph{dependencies}\quad \quad $\leftarrow$ AKA a \emph{prerequisite}\\
+\tab \emph{commands}\\
+\quad $\uparrow$\\
+Tab
+}
+\end{frame}
+
+%The beauty of Make is that it?s simply a rigorous way of recording what you?re already doing. It doesn?t fundamentally change how you do something, but it encourages to you record each step in the process, enabling you (and your coworkers) to reproduce the entire process later.
+
+%The core concept is that generated files depend on other files. When generated files are missing, or when files they depend on have changed, needed files are re-made using a sequence of commands you specify. 
 
 
 % --- Slide ---
@@ -489,9 +655,16 @@ Reference: \url{http://www.gnu.org/software/make/}
 \begin{frame}[fragile]
 \frametitle{The makefile}
 \begin{itemize}
-\item Standard names: GNUmakefile, makefile, Makefile.
-\item To run make: "make" or "make <target(s)>"
-\item make ?f nonStandardName
+\item Standard names: makefile, Makefile, GNUmakefile.
+\item To run:
+\begin{Verbatim}
+$ make  
+$ make some_target
+\end{Verbatim}
+\item If using a non-standard name, say my\_app.make
+\begin{Verbatim}
+$ make -f my_app.make
+\end{Verbatim}
 \end{itemize}
 
 \end{frame}
@@ -502,31 +675,26 @@ Reference: \url{http://www.gnu.org/software/make/}
 \begin{frame}[fragile]
 \frametitle{The makefile}
 
-\begin{verbatim}
-myfile=a_file.pdf
-# This Makefile converts a PS file to a PDF file
-include Makefile.local 
-sinclude Rules.mk
-$(myfile): a_file.ps
-          ps2pdf $<
-\end{verbatim}
-
-\end{frame}
-
-
-% --- Slide ---
-
-\begin{frame}[fragile]
-\frametitle{The makefile}
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\textcolor{red}{myfile=a\_file.pdf}
-# This Makefile converts a PS file to a PDF file
-include Makefile.local 
-sinclude Rules.mk
-$(myfile): a_file.ps
-          ps2pdf $<
+\footnotesize{
+\begin{Verbatim}[frame=single]
+hello.exe: hello.o
+        gfortran hello.o -o hello.exe 
+        
+hello.o: hello.F90
+        gfortran -c hello.F90
+clean:
+	rm *.o *.exe
 \end{Verbatim}
+
+\begin{verbatim}
+$ make  (or make hello.exe)
+gfortran -o hello.exe hello.F90 -I.
+$ ls
+GNUmakefile  hello.exe  hello.F90
+$ ./hello.exe
+ hello world!
+\end{verbatim}
+}
 
 \end{frame}
 
@@ -536,22 +704,16 @@ $(myfile): a_file.ps
 \begin{frame}[fragile]
 \frametitle{Conclusion}
 
-Fortran continues and will continue to be a dominant language for large scale simulation of physical systems.
-\vfill
-\begin{aquote}{John Backus}
-I don't know what the technical characteristics of
-the standard language for scientific and engineering
-computation in the year 2000 will be... but I know it
-will be called Fortran.
-\end{aquote}
-
-\bigskip
 References:
+\scriptsize{
 \begin{itemize}
 \item \url{https://gcc.gnu.org/fortran/}
 \item \url{http://fortranwiki.org/fortran/show/HomePage}
 \item \url{https://en.wikipedia.org/wiki/Fortran}
+\item \url{https://www.gnu.org/software/make/manual/make.html}
 \end{itemize}
+}
+
 \end{frame}
 
 \end{document}
