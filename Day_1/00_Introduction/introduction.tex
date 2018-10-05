@@ -108,7 +108,7 @@ Bruce Van Aartsen}
 \institute{
   NASA GSFC Code 606 (ASTG)\\
   Greenbelt, Maryland 20771\\[1ex]
-%  \texttt{carlos.a.cruz@nasa.gov}
+  \texttt{carlos.a.cruz@nasa.gov}
 }
 \date{October 24, 2018}
 
@@ -174,6 +174,31 @@ Bruce Van Aartsen}
 
 % --- Slide
 
+\begin{frame}{Agenda}
+
+\begin{columns}[onlytextwidth,t]
+    \begin{column}{0.48\textwidth}
+        \textbf{Day 1}
+
+    \begin{itemize}
+        \item \textcolor{red}{Introduction}
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+
+    \begin{itemize}
+        \item History of Fortran
+        \item Why Fortran?
+        \item Fortran Compilers
+        \item Building Projects - Makefile
+    \end{itemize}
+  \end{column}
+\end{columns}
+
+\end{frame}
+
+% --- Slide
+
 \begin{frame}{A Brief History of Fortran}
 
 \begin{itemize}
@@ -183,18 +208,20 @@ Bruce Van Aartsen}
   \item Started ca 1954 by John Backus and his team at IBM
   \item Name comes from \textbf{FOR}mula \textbf{TRAN}slation
   \item First language standard in 1967 (Fortran 66)
+  %Fortran 66 was the first ANSI standardized version of the language which made it portable. It introduced common data types, e.g. integer and double precision, block IF and DO statements
   }
   \end{itemize}
   
     \begin{figure}[t]
 \centering
-\includegraphics[scale=.3]{fortran-card}
+\includegraphics[scale=.3]{../../shared/fortran-card}
 \end{figure}
 
   \item FORTRAN 77
   \begin{itemize}
   \scriptsize{
   \item New standard to overcome divergence in different implementations (1978)
+  %Fortran 77 was also another major revision. It introduced file I/O and character data types
   }
   \end{itemize}
   
@@ -221,6 +248,8 @@ Bruce Van Aartsen}
   \scriptsize{
   \item Major revision. Added modules, derived data types, dynamic memory allocation
   \item Retained backward compatibility
+  % Fortran 90 was a major step towards modernizing the language. It allowed free form code, array slicing, modules, interfaces and dynamic memory amongst other features 
+  
   }
   \end{itemize}
   
@@ -228,13 +257,14 @@ Bruce Van Aartsen}
   \begin{itemize}
   \scriptsize{
   \item Minor revision. Added several HPC related features; forall, where, pure,
+  % Fortran 95 was a minor revision which includes pointers, pure and elemental features.
  elemental, pointers
   }
   \end{itemize}
   
     \begin{figure}[t]
 \centering
-\includegraphics[scale=.3]{Fortran-90-95}
+\includegraphics[scale=.3]{../../shared/Fortran-90-95}
 \end{figure}
   
   
@@ -276,13 +306,12 @@ Bruce Van Aartsen}
   \item Minor revision. Added co-arrays and submodules  
   }
   \end{itemize}
-  
 \end{itemize}
 
   
     \begin{figure}[t]
 \centering
-\includegraphics[scale=.25]{oop.jpg}
+\includegraphics[scale=.25]{../../shared/oop.jpg}
 \end{figure}
   
   
@@ -297,6 +326,32 @@ Bruce Van Aartsen}
 
 \end{frame}
 
+% --- Slide ---
+\begin{frame}[fragile]
+\frametitle{Why Fortran?}
+
+\begin{itemize}
+\item Fortran is the dominant language in HPC applications
+ \begin{itemize}
+ \item climate/weather models
+ \item large scale molecular dynamics
+ \item electronic structure calculation codes
+ \item modeling of stars and galaxies
+ \end{itemize}
+ \item Many dense linear algebra libraries developed in Fortran, e.g. BLAS, LAPACK, Scalapack.
+ \item Some R and Python linear algebra kernels are written in Fortran.
+\end{itemize}
+
+Fortran continues and will continue to be a dominant language for large scale simulation of 
+physical systems\footnote{Survey of Fortran users at the 2014 Supercomputing Convention, 100\% of respondents said they thought they would still be using Fortran in five years}.\\
+
+%\scriptsize{
+%Reference:\\
+%Fortran: The Ideal HPC Programming Language: \url{https://queue.acm.org/detail.cfm?id=1820518}
+%}
+\end{frame}
+
+
 
 
 % --- Slide
@@ -304,42 +359,28 @@ Bruce Van Aartsen}
 \begin{frame}{Why Fortran?}
 % https://arstechnica.com/science/2014/05/scientific-computings-future-can-any-coding-language-top-a-1950s-behemoth/
 
+Unique benefits:
 \begin{itemize}
-\item Legacy code
+
 \item Expressiveness / ease
  \begin{itemize}
  \item Arrays lie at the heart of all physics/engineering calculations
+ % The array is the most common data structure in computational science.
  \item Little to worry about pointers and memory allocation
  \begin{itemize}
- \item Variables are usually passed by reference, not by value
+ \item Dynamic arrays in Fortran are not pointers, where in C/C++ they are pointers making them more difficult to deal with.
  \end{itemize}
  \end{itemize}
-\item Math support
-\item Performance\footnote{Originally proposed as a practical alternative to \textbf{Assembly} language, i.e. it was designed to compete on performance with hand-coded assembler!}
-\begin{itemize}
-\item Parallelism
-\end{itemize}
-
-% \item It's been \textbf{modernized}
+\item Performance\footnote{Originally proposed as a practical alternative to \textbf{Assembly} language, i.e. it was designed to compete on performance with hand-coded assembler!} 
+\item Has added many modern features of programming into newer standards.
+\item Legacy code
+\item It is \textbf{not} a general purpose programming language like C, C++ and Python.
+ \begin{itemize}
+ \item It is a language that has been designed exclusively for numerical computation and has applications only in computational science and engineering.
+ \end{itemize}
  \end{itemize}
 
 \end{frame}
-
-% --- Slide ---
-\begin{frame}[fragile]
-\frametitle{Why Fortran?}
-
-Fortran continues and will continue to be a dominant language for large scale simulation of physical systems.
-\vfill
-\begin{aquote}{John Backus}
-I don't know what the technical characteristics of
-the standard language for scientific and engineering
-computation in the year 2000 will be... but I know it
-will be called Fortran.
-\end{aquote}
-
-\end{frame}
-
 
 % --- Slide ---
 \begin{frame}[fragile]
@@ -363,7 +404,7 @@ Compiling, Linking and Running Fortran Programs
 
 You will need a \textbf{compiler} to produce an executable from Fortran code so that you can...well...execute the program. So, what is a \textbf{compiler}?
 \vfill
-A compiler is a \textbf{program} that translates source code written in some high-level language -like Fortran - into low-level machine code. The machine code is generally specific to the computer architecture where it was compiled.
+A compiler is a \textbf{program} that translates source code written in some high-level language - like Fortran - into low-level machine code. The machine code is generally specific to the computer architecture where it was compiled.
 
 % refers to the processing of source code files
 %and the creation of an 'object' file
@@ -381,7 +422,7 @@ How does a compiler translate source code into executable code?
 
 \begin{figure}[t]
 \centering
-\includegraphics[scale=.3]{compiler}
+\includegraphics[scale=.3]{../../shared/compiler}
 \end{figure}
 
 \end{frame}
