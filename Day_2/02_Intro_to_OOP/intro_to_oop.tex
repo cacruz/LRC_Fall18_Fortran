@@ -133,8 +133,8 @@ keepspaces,
     \begin{itemize}
         \item History of OOP
         \item Why OOP?
-        \item Basic Conceps
-        \item A Motivating Example
+        \item Basic Concepts
+        \item Examples
     \end{itemize}
 
 \end{frame}
@@ -170,6 +170,329 @@ The basic question we face as computational scientists is: how do we deal with c
 
 \end{frame}
 
+% --- Slide ---
+
+\begin{frame}{Object Oriented Programming (OOP)}
+OOP is a major paradigm shift. It grew out of perceived weaknesses of \emph{structured programming}:
+
+\begin{itemize}
+  \item programs consisted of (global) data structures and disjoint procedures for accessing/modifying the data structures.
+  \item difficulties arise especially for large systems composed in this manner.
+\end{itemize}
+  
+  Weakness \#1:
+\begin{itemize}
+
+  \item Lack of support for  \textbf{encapsulation}. 
+  \begin{itemize}
+  \item Modifications are difficult/expensive.
+  \item Developers need to be expert in all parts of the application.
+  \item Limited modularity.
+  \end{itemize}
+
+ \end{itemize}
+
+\end{frame}
+
+
+% --- Slide ---
+
+\begin{frame}{Object Oriented Programming (OOP)}
+
+  Weakness \#2:
+\begin{itemize}
+
+  \item Lack of support for  \textbf{inheritance}. 
+  \begin{itemize}
+  \item Isolated use cases that require different logic cannot be directly supported. Workarounds are tedious at best and tend to bloat logic and data structures.
+  \item Centralized development constraint.   
+  \begin{itemize}
+  \item If an external developer creates a useful extension, she must push the extension back to the original developers in order to be of use to other users.
+  \end{itemize}
+   \end{itemize}
+
+ \end{itemize}
+
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}{Object Oriented Programming (OOP)}
+
+  Weakness \#3:
+\begin{itemize}
+
+  \item Lack of support for  \textbf{polymorphism}. 
+  \item Sometimes referred to as \textbf{dynamic dispatch}.
+  \item Common scenarios involve multiple implementations of the same functionality.   
+  % Support for variations leads to pervasive nested conditionals which increase complexity and errors.
+  \item Examples:
+  \begin{itemize}
+  \item Support for multiple coordinate systems or grids
+  \item Support for multiple nonlinear solvers
+  \end{itemize}
+  
+ \end{itemize}
+  
+Weakness \#4: Lack of support for \textbf{templates}
+ \begin{itemize}
+\item Developers often encounter the need to support several data structures that are nearly identical but vary in some systematic ways.
+\item Difficult to maintain consistency as such structures are extended.
+% E.g. real and integer arrays
+ \end{itemize}
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}{What is OOP?} 
+
+OOP is a paradigm in which the fundamental participants are \textbf{objects} which embody both state and behavior.
+\begin{columns}[onlytextwidth,t]
+    \begin{column}{0.48\textwidth}
+        
+%\begin{center} 
+  \includegraphics[width=1.2\textwidth]{../../shared/oop_building_blocks.jpg} 
+%\end{center} 
+
+  \end{column}
+  \begin{column}{0.48\textwidth}
+\scriptsize{
+    \begin{itemize}
+        \item A \textbf{class} is a set of properties and related procedures which access/modify those properties.
+        \item \textbf{Objects} are individual instances of classes.
+        \begin{itemize}
+        \item \scriptsize{Behavior of objects is expressed in terms of methods which are the class procedures. Methods have privileged access to object state.}
+        \item \scriptsize{Method invocation may look different than regular procedure calls.}
+        \end{itemize}
+        \item Within a program, objects interact with each other by sending messages (i.e. invoking methods)
+    \end{itemize}
+ }
+  \end{column}
+\end{columns}
+
+
+\end{frame} 
+
+
+% --- Slide ---
+
+\begin{frame}{Encapsulation}
+
+\textbf{Encapsulation} is the ability to isolate and hide implementation details within a software subsystem.
+\begin{itemize}
+
+  \item Instead of directly accessing items in a data structure, methods are invoked to retrieve/modify. 
+  \item If implementation details change, access methods are updated and client code remains unchanged.
+  \item E.g.
+  \begin{itemize}
+  \item month = date \% month $\leftarrow$  Assumes "month" field\\
+  becomes\\
+  month = getMonth(date) $\leftarrow$ Does not assume "month"
+  % Remember - the big wins are for complex software with many complex data structures.
+ \end{itemize}
+  \item Note: Fortran 90 introduced strong encapsulation capabilities with public/private access for module entities.
+
+ \end{itemize}
+
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}{Inheritance}
+
+\textbf{Inheritance} is a way to form new classes using classes that have already been defined.
+\begin{itemize}
+
+  \item Original class is referred to as the \textbf{base} class (or \textbf{parent} class)
+  \item New class is referred to as the \textbf{child} class or \textbf{subclass}
+  \item Intent is to reuse significant portions of base class.
+  \item Inheritance relations always form hierarchical trees.
+  % Remember - the big wins are for complex software with many complex data structures.
+  \item Fortran 2003 introduces inheritance (keyword: \textbf{extends})
+  \item Child class should be usable in any context where the base class is usable.
+  %Child class may add additional fields/components
+ % Child class may override some methods of the parent class and leave other behaviors unchanged.
+  \begin{itemize}
+  \item Useful notion: "is-a" relationship categorization:
+    \begin{itemize}
+    \item frog is-a kind of amphibian
+    \item sparse-matrix is-a kind of matrix
+    \end{itemize}
+  \end{itemize}
+  
+ \end{itemize}
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}{Inheritance example} 
+Shape class
+\begin{center} 
+  \includegraphics[width=0.9\textwidth]{shapeClass.png} 
+\end{center} 
+
+\end{frame} 
+
+% --- Slide ---
+
+\begin{frame}{Function/procedure pointers}
+
+While not strictly an OO concept, function pointers are a major part of the implementation of OO abstractions.
+\begin{itemize}
+
+  \item A function pointer is a \emph{data type} that is able to be associated with actual functions/procedures. The association is determined at \emph{run-time}.
+
+  \item Data structure with function pointer can be used to invoke different behavior in different contexts by associating with different actual functions.
+  \item Introduced in Fortran 2003
+  
+ \end{itemize}
+
+\end{frame}
+
+
+
+% --- Slide ---
+
+\begin{frame}{Polymorphism}
+
+\textbf{Polymorphism} is the capability of treating objects of a subclass as though they were members of the parent class.
+\begin{itemize}
+
+  \item A \textbf{polymorphic variable} is one whose actual type is not known at compile time.
+    \begin{itemize}
+    \item Run-time environment calls the appropriate methods on depending on actual type (or \textbf{dynamic} type)
+    \item Implemented with \textbf{dynamic binding} (usually function pointers)
+    \end{itemize}
+
+  \item Polymorphism and inheritance are distinct aspects but are typically applied together for maximum impact.
+  \item E.g. polymorphic variable myShape of class ?Shape? will compute the compute area/perimeter according to type set at run time.
+  
+ \end{itemize}
+
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}{Advantages of Polymorphism}
+
+\textbf{Polymorphism} is the capability of treating objects of a subclass as though they were members of the parent class.
+\begin{itemize}
+
+  \item \emph{Generic programming} - high level algorithms are written in terms of the base class. Do not need to write variants for each subclass.
+      \begin{itemize}
+    \item E.g. an algorithm working with linear equations can be written in terms of methods for generic matrices, while the specific operations (factor(), solve()) are implemented differently for the subclasses (Dense, Sparse, Banded)
+    \end{itemize}
+
+  \item Allows customization \textbf{without} violating encapsulation.
+      \begin{itemize}
+    \item Extension does not require access to source of the base-class.
+    \end{itemize}
+  
+ \end{itemize}
+
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}{Aside on Overloading}
+
+AKA \textbf{ad-hoc} polymorphism.
+\begin{itemize}
+
+  \item Ability to use the same name for multiple procedures.
+    \begin{itemize}
+    \item Actual procedure used is determined by type of arguments.
+    \end{itemize}
+
+  \item Not based upon any type hierarchy.
+    \begin{itemize}
+    \item No reuse is possible - each type must have a full implementation of the overloaded procedure.
+    \end{itemize}
+ 
+   \item Introduced in Fortran 90 with interface blocks.
+ 
+ \end{itemize}
+
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}{Templates}
+
+AKA \textbf{Parametric Polymorphism}.
+\begin{itemize}
+
+  \item Some languages support the ability to declare multiple similar classes simultaneously.
+    \begin{itemize}
+    \item Routines using the type then specify which case to use.
+    \end{itemize}
+
+  \item Fortran 2003 introduces a limited form.
+    \begin{itemize}
+    \item Derived types can be parameterized for ?kinds? and sizes.
+    \item Cannot parameterize integers and reals simultaneously.
+    \end{itemize}
+  
+ \end{itemize}
+
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}{OOP and Model Infrastructure}
+
+The clearest case for OOP in scientific models is in the "infrastructure" which manages the various model abstractions.
+\begin{itemize}
+
+  \item Infrastructure includes
+    \begin{itemize}
+    \item I/O
+    \item Computational grid
+    \item Loop constructs
+    \item Domain decomposition
+    \item Calendars/clocks
+    \end{itemize}
+
+  \item Common infrastructure issues among various Earth system models led to the creation of the ESMF\footnote{Earth System Modeling Framework}. While not truly OO, ESMF is strongly encapsulated and has an object based look-and-feel.
+  
+ \end{itemize}
+
+\end{frame}
+
+
+% --- Slide ---
+
+\begin{frame}{Examples}
+
+\begin{itemize}
+
+  \item Air parcel trajectory code
+  \begin{itemize}
+  \item Needs to support multiple vector fields
+  \item Needs to support multiple integration schemes   
+  \end{itemize}
+  
+  \item Multiple Computational Grids
+
+  \begin{itemize}
+  \item E.g. for coupled Earth systems we might have
+  \begin{itemize}
+  \item Lat-Lon (Arakawa A, B, C, D)
+  \item Cubed-Sphere
+  \item Icosahedral
+   \end{itemize}
+   \item Some subsystems can "work" with any grid, while others are dependent on specific representations.
+   \item Coupling can require custom interpolations between grids.
+   \item Can we provide a software layer that supports various grid-specific operations while hiding the details from the layers that don't really care which grid is being used?
+   % Domain-decomposition, halo-fill
+   % I/O operations
+   \end{itemize}
+
+ \end{itemize}
+
+\end{frame}
 
 
 % --- Slide

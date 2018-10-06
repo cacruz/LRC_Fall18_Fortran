@@ -133,8 +133,6 @@ keepspaces,
     \item Variables as Objects
     \begin{itemize}
     \item Type bound procedures
-    \item Operators
-    \item Constructors
     \end{itemize}
     \item Type Extension and Inheritance
     \begin{itemize}
@@ -150,11 +148,291 @@ keepspaces,
 
 % --- Slide ---
 
-\begin{frame}{Motivation}
+\begin{frame}{Type-bound Procedures}
+
+Or "Procedures Bound to a Type by Name"
+\begin{itemize}
+  \item Allows a Fortran subroutine or procedure to be treated as a method on an object of the given type.\\
+  \quad call object\%method(...)\\
+  \quad x = object\%func(...)\\
+  which is equivalent to\\
+  \quad call method(object, ...)\\
+  \quad x = func(object, ...)\\
+  \item This syntax encourages an object-oriented style of programming that can improve clarity in some contexts.
+  \item Procedures can also be bound by type to operators: [=, +, etc. ]
+\end{itemize}
+ 
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Type-bound Syntax}
+
+The following example defines a derived type with 2 type bound procedures compute() and retrieve()
+\FortranStyle
+
+ \begin{lstlisting}[style=Fortran]
+type myType   real :: valuecontains   procedure :: compute    procedure :: retrieve
+end type myType
+\end{lstlisting}
+\begin{itemize}
+\item Type-bound procedures must be module procedures or external procedures with explicit interfaces.\\
+\item By default type-bound names are public, but each entity in a type (including components) can be have a PUBLIC/PRIVATE attribute.
+\end{itemize}
 
 
 \end{frame}
 
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Example}
+
+
+\begin{columns}[onlytextwidth,t]
+    \begin{column}{0.48\textwidth}
+\tiny{
+\begin{lstlisting}[style=Fortran]
+module myType_mod   private   public :: myType 
+   type myType        real :: myValue(4) = 0.0   contains        procedure :: write        procedure :: reset   end type myType 
+contains   subroutine write (this, unit)   class(mytype) :: this      integer, optional :: unit      if(present(unit)) then         write (unit, *) this % myValue      else         print *, this%myvalue       endif   end subroutine write...
+\end{lstlisting}
+}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+  
+\tiny{
+\begin{lstlisting}[style=Fortran]
+...
+subroutine reset(variable)     class(mytype) :: variablevariable%myvalue = 0.0 end subroutine resetend module myType_mod
+\end{lstlisting}
+}
+\scriptsize{
+\begin{itemize}
+\item Usage:\\
+use mytype\_mod\\
+type(myType) :: var\\
+...\\
+call var\%write(unit=6)\\
+call var\%reset()\\
+\end{itemize}
+}
+  \end{column}
+\end{columns}
+ 
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Passed-object dummy arg}
+
+\scriptsize{
+By default, type-bound procedures pass the object as the first argument.
+\begin{itemize}
+  \item Can override behavior with \textcolor{blue}{NOPASS} attribute.\\
+  \quad procedure, \textcolor{blue}{NOPASS} :: method\\
+  \quad ...\\
+  \quad call thing \% method(...)  $\leftarrow$ No object is passed \\
+  
+  \item Can also specify which argument is to be associated with the passed-object with the \textcolor{blue}{PASS} attribute:\\
+  \quad procedure, \textcolor{blue}{PASS}(obj) :: method\\
+  \quad ...\\
+  \quad subroutine method(x,\textcolor{blue}{obj},y) \\
+  \quad ... \\
+  \quad call thing \% method(x,y)  $\leftarrow$ Thing is 2nd obj \\
+  \item The default can be explicitly confirmed by \\
+  \quad procedure, \textcolor{blue}{PASS} :: method\\
+\end{itemize}
+\textbf{Strongly} recommend that you always use the default.
+}
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Renaming and Generic}
+
+\begin{itemize}
+\item Type-bound procedures can specify an alternative public name using a mechanism analogous to that for the module ONLY clause:\\
+  \quad procedure :: write $=>$ writeInternal\\
+  \quad ...\\
+  \quad call thing \% method(...)  $\leftarrow$ No object is passed \\
+  
+  \item Similarly, an external name can be overloaded for multiple interfaces with the GENERIC statement:\\
+  \quad type myType\\
+  \quad contains\\
+  \quad \quad procedure :: addInteger\\  \quad \quad procedure :: addReal\\
+  \quad \quad \textcolor{blue}{generic} :: add $=> $ addReal, addInteger\\
+  \quad end type\\
+\end{itemize}
+
+\end{frame}
+
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Inheritance}
+Fortran 2003 introduces OOP inheritance via the EXTENDS attribute for user defined types.
+\begin{itemize}
+\item Implementation is restricted to single inheritance.
+  \begin{itemize}
+  \item Inheritance always forms hierarchical trees.
+  \end{itemize}
+
+\item Implementation is designed to be efficient such that offsets for components and type-bound procedures can be computed at compile time. ("single lookup")
+
+\end{itemize}
+With type extension, a developer may add new components and type-bound procedures to an existing derived type even \emph{without} access to the source code for that type.
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Inheritance Terminology}
+
+\begin{itemize}
+\item A type is considered to be extensible if it is:
+  \begin{itemize}
+  \item Not a SEQUENCE type
+  \item Not BIND(C)
+  \end{itemize}
+
+\item An extensible type without the EXTENDS attribute is considered to be a 'base type'.
+  \begin{itemize}
+  \item Base types need not have any components.
+  \item Extension need not add any components.
+  \end{itemize}
+  
+\item A type with the EXTENDS attribute is said to be an extended type.
+  \begin{itemize}
+  \item 'Parent type' is used for the type from which the extension is made.
+  \item All the components, and bound procedures of the parent type are inherited by the extended type and they are known by the same names.
+  % An extended type can be a parent for yet another type, and so on.
+  \end{itemize}
+  
+\end{itemize}
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Syntax for Extends}
+
+\FortranStyle
+
+ \begin{lstlisting}[style=Fortran]
+type Location2D   real :: latitude, longitudeend type Location2D
+
+type, EXTENDS (Location2D) :: Location3D 
+   real :: pressureHeightend type Location3D
+   ...
+type (Location3D) :: locationlat = location % latitudelon = location % longitudeheight = location % pressureHeight
+\end{lstlisting}
+
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{The Parent Component}
+
+\begin{itemize}
+\item Every extended type has an implicit component associated with the parent type
+  \begin{itemize}
+  \item The component name is the type name of the parent.
+  \item Provides multiple mechanisms to access components in parent type
+  \end{itemize}
+\end{itemize}
+
+From the previous example we could do:
+\FortranStyle
+ \begin{lstlisting}[style=Fortran]
+type (Location2D) :: latLonlatLon = location % Location2Dlat = location % Location2D % latitude
+\end{lstlisting}
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Extends and Type-bound}
+
+\begin{itemize}
+\item Type-bound procedures in the parent may be invoked within extended types.
+\item Extended types may add additional type-bound procedures in the natural fashion.
+\item An extended type can \emph{override} a type-bound procedure in the parent - specifying new behavior in the extended type.
+  \begin{itemize}
+  \item The keyword \textcolor{blue}{NON\_OVERRIDABLE} can be used to prohibit extended classes from overriding behavior:\\
+  \quad procedure, \textcolor{blue}{NON\_OVERRIDABLE} :: foo
+  \end{itemize}
+\end{itemize}
+
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Overriding Example}
+
+\scriptsize{
+\FortranStyle
+ \begin{lstlisting}[style=Fortran]
+type Square   real :: lengthcontains   procedure :: area => squareAreaend type Square
+
+type, extends(Square) :: rectangle   real :: widthcontains   procedure :: area => rectangleAreaend type Rectangler
+
+Real function squareArea(this)   squareArea = (this % length) ** 2
+
+Real function rectangleArea(this)   rectangleArea = (this % length) * (this % width)
+\end{lstlisting}
+}
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Abstract Types}
+
+\begin{itemize}
+\item It is often useful to have a base type that declares methods (type-bound procedures) that are not implemented except in extended classes.
+\item Fortran 2003 uses the \textcolor{blue}{ABSTRACT} attribute to denote such a type.
+  \begin{itemize}
+  \item The \textcolor{blue}{DEFERRED} attribute is used for those methods which are not to be implemented.
+  \item No variables can be declared to be of an abstract type.
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Abstract Example}
+
+\scriptsize{
+\FortranStyle
+ \begin{lstlisting}[style=Fortran]
+type, ABSTRACT :: AbstractShape
+contains   procedure (AreaInterface), DEFERRED :: area 
+end type AbstractShape
+...
+abstract interface   subroutine AreaInterface(obj)      import AbstractShape      class (AbstractShape) :: obj   end subroutine AreaInterfaceend interface
+...
+type, extends(AbstractShape) :: Square   real :: lengthcontains   procedure :: area => squareArea !  Provide concreteend type Square
+\end{lstlisting}
+}
+
+\end{frame}
 
 
 % --- Slide
