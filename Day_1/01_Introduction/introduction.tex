@@ -100,11 +100,9 @@ keepspaces,
   {\signed{\usebox\mybox}\end{quote}}
   
 % items enclosed in square brackets are optional; explanation below
-\title{An overview of the Fortran programming language}
+\title{Introduction and Setup}
 %\subtitle{Introduction}
-\author{Carlos Cruz\\
-Jules Kouatchou\\
-Bruce Van Aartsen}
+\author{Carlos Cruz}
 \institute{
   NASA GSFC Code 606 (ASTG)\\
   Greenbelt, Maryland 20771\\[1ex]
@@ -129,6 +127,7 @@ Bruce Van Aartsen}
 
 \begin{frame}{Who we are?}
 
+Members of the Advanced Software Technology Group (ASTG) Code 606, NASA GSFC:
 \begin{itemize}
     \item Carlos A. Cruz (Computational Scientist)
     \item Jules Kouatchou (Computational Scientist)
@@ -480,18 +479,38 @@ GNU Fortran is a part of GCC, the \emph{GNU Compiler Collection}.
 \FortranStyle
 
  \begin{lstlisting}[style=Fortran]
-PROGRAM program_name $\leftarrow$ stand-alone program
-IMPLICIT NONE $\leftarrow$ all variable MUST be declared
+PROGRAM program_name ! <--- stand-alone program
+IMPLICIT NONE ! <--- all variable MUST be declared
 ! Variable declarations
 ! ...
 ! Main program
 ! ...
-STOP $\leftarrow$ stops execution of the program
+STOP ! <--- stops execution of the program
 END PROGRAM
 \end{lstlisting}
 
 \end{frame}
 
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Digression: file extensions}
+
+\begin{itemize}
+\item FORTRAN77:
+\begin{itemize}
+\item .f   $\leftarrow$ \emph{fixed-form} source code
+\item Executable code between lines 7-72
+\end{itemize}
+\item Fortran90 and later:
+\begin{itemize}
+\item .f90     $\leftarrow$ \emph{free-form} source code
+\end{itemize}
+\item * .F $\leftarrow$ \emph{fixed or free form} source code that must be preprocessed
+\item * .F90 $\leftarrow$ \emph{free form} source code that must be preprocessed
+\end{itemize}
+
+\end{frame}
 
 % --- Slide
 
@@ -500,9 +519,10 @@ END PROGRAM
 
 \FortranStyle
 
+hello.F90:
  \begin{lstlisting}[style=Fortran]
 program hello
-print *,'Hello World!'
+print *,"Hello World!"
 end program
 \end{lstlisting}
 
