@@ -1,0 +1,197 @@
+\documentclass[11pt]{beamer}
+\setbeamertemplate{navigation symbols}{}
+ \setbeamercovered{transparent}
+\usepackage{listings}
+%\usetheme{Copenhagen}
+\usetheme{Singapore}
+%\usetheme{Madrid}
+%\usetheme{Hannover}
+%\usetheme{boxes}
+%\usetheme{Boadilla}
+\usefonttheme[onlymath]{serif}
+\usecolortheme{beaver}
+\usepackage{textpos}
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+\usepackage{multicol}
+\usepackage{lipsum}
+\parskip 1ex
+
+\newcommand\FontAcolumn{\fontsize{6}{7.2}\selectfont}
+\newcommand\FontBcolumn{\fontsize{8}{7.2}\selectfont}
+\newcommand\FontCcolumn{\fontsize{10}{7.2}\selectfont}
+\newcommand\FontDcolumn{\fontsize{11}{7.2}\selectfont}
+
+\definecolor{gray97}{gray}{.97}
+\definecolor{gray75}{gray}{.75}
+\definecolor{gray75}{gray}{.45}
+
+\lstdefinestyle{Fortran}{language=[90]Fortran}
+
+\newcommand\FortranStyle
+{
+\lstset{
+frame=Ltb,
+framerule=0pt,
+columns=fullflexible,
+aboveskip=0.5cm,
+framextopmargin=3pt,
+framexbottommargin=3pt,
+framexleftmargin=0.4cm,
+framesep=0pt,
+rulesep=.4pt,
+backgroundcolor=\color{gray97},
+rulesepcolor=\color{black},
+stringstyle=\ttfamily,
+showstringspaces=false,
+basicstyle=\ttfamily,
+commentstyle=\color{green},
+keywordstyle=\color{red},
+numbers=left,
+numbersep=15pt,
+numberstyle=\tiny,
+numberfirstline=false,
+breaklines=true,
+ tabsize=2,
+ extendedchars=true,
+keepspaces,
+}
+}
+
+\newcommand\FortranStyleA
+{
+\lstset{
+frame=Ltb,
+framerule=0pt,
+columns=fullflexible,
+aboveskip=0.5cm,
+framextopmargin=3pt,
+framexbottommargin=3pt,
+framexleftmargin=0.4cm,
+framesep=0pt,
+rulesep=.4pt,
+backgroundcolor=\color{gray97},
+rulesepcolor=\color{black},
+stringstyle=\ttfamily,
+showstringspaces=false,
+basicstyle=\ttfamily,
+commentstyle=\color{green},
+keywordstyle=\color{red},
+numbersep=15pt,
+numberstyle=\tiny,
+numberfirstline=false,
+breaklines=true,
+ tabsize=2,
+ extendedchars=true,
+keepspaces,
+}
+}
+
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\newcommand{\light}[1]{\textcolor{lightgray}{#1}}
+    
+\def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
+  \hbox{}\nobreak\hfil(#1)%
+  \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}}
+  {\signed{\usebox\mybox}\end{quote}}
+
+
+% items enclosed in square brackets are optional; explanation below
+\title{Object Oriented Fortran}
+\subtitle{An Overview}
+\author{Carlos Cruz}
+\institute{
+  NASA GSFC Code 606 (ASTG)\\
+  Greenbelt, Maryland 20771\\[1ex]
+  \texttt{carlos.a.cruz@nasa.gov}
+}
+\date{October 25, 2018}
+
+\begin{document}
+
+% --- Title page ---
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\logo{%
+  \includegraphics[width=1cm,height=1cm,keepaspectratio]{../../shared/nasa-ball.png}%
+  \hspace{\dimexpr\paperwidth-2cm-5pt}%
+  \includegraphics[width=1cm,height=1cm,keepaspectratio]{../../shared/ssai-logo.png}%
+}
+
+
+% --- Slide
+
+\begin{frame}{Agenda}
+
+\textcolor{red}{Introduction to OOP}
+    \begin{itemize}
+        \item History of OOP
+        \item Why OOP?
+        \item Basic Conceps
+        \item A Motivating Example
+    \end{itemize}
+
+\end{frame}
+
+
+% --- Slide ---
+
+\begin{frame}{Motivation}
+
+The basic question we face as computational scientists is: how do we deal with computation?
+
+\end{frame}
+
+
+% --- Slide ---
+
+\begin{frame}{Programming paradigms}
+% a way of conceptualizing what it means to perform computation and how tasks to be carried out on the computer should be structured and organized
+\textbf{Functional programming}\\
+\textbf{Component based programming}\\
+\textbf{Procedural programming}
+\begin{itemize}
+  \item C, Fortran are procedural programming languages
+\begin{itemize}
+  \item single program constructed from \textbf{functions} and \textbf{subroutines}
+  %emphasis is on doing things so that large programs are divided into smaller programs known as functions.
+ \item modularity and re-use achieved through grouping of procedures (\textbf{modules})
+  \item data scope based on function scope
+ \end{itemize}
+ \item generally no explicit link between data and functions
+  \item data is accessible and modifiable by functions
+\end{itemize}
+
+\end{frame}
+
+
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Conclusion}
+
+\FontCcolumn
+
+\begin{itemize}
+\item F2003 includes a solid support of object orientation.
+\item Provides opportunities to adopt newer technologies and modernize current earth science models.
+\item There is already a F2008 standard, but enhancements are "minor" (submodules, co-arrays)...and it may take a lot longer for compilers to adopt the standard.
+\end{itemize}
+
+\bigskip
+References:
+\begin{itemize}
+\item John Reid, "The new features of Fortran 2003, ACM SIGPLAN Fortran Forum 96", 10 (2007)
+\item http://www.nag.com/nagware/NP/doc/nag\_f2003.pdf
+\item http://www.pgroup.com/doc/pgifortref.pdf
+\end{itemize}
+\end{frame}
+
+\end{document}
