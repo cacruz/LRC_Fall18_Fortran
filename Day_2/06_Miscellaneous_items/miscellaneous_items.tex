@@ -149,8 +149,78 @@ keepspaces,
 
 % --- Slide ---
 
-\begin{frame}{Motivation}
+\begin{frame}{Computing Environment}
+\begin{itemize}
+  \item From the intrinsic module ISO\_FORTRAN\_ENV
+  \item For the following assume we have launched the executable with the command line: \\
+  \quad \$ foo.x apple 5 z
+  \item COMMAND\_ARGUMENT\_COUNT()
+  \begin{itemize}
+  \item Returns integer number of command arguments
+  \item Example command returns 3
+  \end{itemize}
+ 
+ \item GET\_COMMAND([COMMAND,LENGTH,STATUS])
+  \begin{itemize}
+  \item All INTENT(OUT)andOPTIONAL
+  \item LENGTH - integer \# of characters in command
+  \item STATUS - integer (success/failure)
+  \item Results for example command:
+  \begin{itemize}
+  \item COMMAND = "foo.x apple 5 z"
+  \item LENGTH=15
+  \end{itemize}
+ \end{itemize}
 
+\end{itemize}
+
+\end{frame}
+
+
+% --- Slide ---
+
+\begin{frame}{Computing Environment}
+\begin{itemize}
+ \item GET\_COMMAND\_ARGUMENT(NUMBER[,VALUE,LENGT H,STATUS])
+  \begin{itemize}
+  \item NUMBER - selects argument
+  \item VALUE - character, intent(out) value of argument
+  \item LENGTH - number of characters in argument
+  \item STATUS - integer (success/failure)
+  \item Example command yields:
+  \begin{itemize}
+  \item GET\_COMMAND\_ARGUMENT(0,VALUE,LENGTH) yields \\
+  \quad VALUE="foo.x", LENGTH=5
+  \item GET\_COMMAND\_ARGUMENT(2,VALUE,LENGTH) yields \\
+  \quad VALUE="5", LENGTH=1
+  \end{itemize}
+ \end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{Environment examples}
+
+\scriptsize{
+Getting command arguments:
+\FortranStyle
+\begin{lstlisting}[style=Fortran]
+use ISO_FORTRAN_ENV 
+character(len=MAXLEN_ARG) :: arg1, arg2 
+call get_command_argument(1, VALUE=arg1) 
+call get_command_argument(2, VALUE=arg2) 
+read(arg1,'(i)') nxread(arg2,'(i)') ny
+\end{lstlisting}
+Getting an environment variable::
+\begin{lstlisting}[style=Fortran]
+use ISO_FORTRAN_ENV 
+character(len=100) :: myShellcall get_environment_variable('SHELL', myShell)
+\end{lstlisting}
+}
 
 \end{frame}
 
