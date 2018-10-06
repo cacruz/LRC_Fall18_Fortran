@@ -146,7 +146,7 @@ Bruce Van Aartsen}
         \textbf{Day 1}
 
     \begin{itemize}
-        \item \textcolor{red}{Introduction}
+        \item Introduction
         \item Variables and data types
         \item Conditionals and loops
         \item Array concepts
@@ -176,25 +176,14 @@ Bruce Van Aartsen}
 
 \begin{frame}{Agenda}
 
-\begin{columns}[onlytextwidth,t]
-    \begin{column}{0.48\textwidth}
-        \textbf{Day 1}
-
-    \begin{itemize}
-        \item \textcolor{red}{Introduction}
-    \end{itemize}
-  \end{column}
-  \begin{column}{0.48\textwidth}
-
+\textcolor{red}{Introduction}
     \begin{itemize}
         \item History of Fortran
         \item Why Fortran?
         \item Fortran Compilers
         \item Building Projects - Makefile
     \end{itemize}
-  \end{column}
-\end{columns}
-
+ 
 \end{frame}
 
 % --- Slide
@@ -479,6 +468,27 @@ The GNU Fortran compiler has several components:
 \item The Fortran compiler itself, \emph{f951}. \emph{f951} \textbf{translates} the source code to assembler code.
  \end{itemize}
 GNU Fortran is a part of GCC, the \emph{GNU Compiler Collection}.
+
+\end{frame}
+
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Basic Program Structure}
+
+\FortranStyle
+
+ \begin{lstlisting}[style=Fortran]
+PROGRAM program_name $\leftarrow$ stand-alone program
+IMPLICIT NONE $\leftarrow$ all variable MUST be declared
+! Variable declarations
+! ...
+! Main program
+! ...
+STOP $\leftarrow$ stops execution of the program
+END PROGRAM
+\end{lstlisting}
 
 \end{frame}
 
