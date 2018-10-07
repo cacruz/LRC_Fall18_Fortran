@@ -140,7 +140,6 @@ keepspaces,
     \end{itemize}
     \item Changes to Intrinsic Functions
     \item Complex Constants
-    \item Support for international character sets
     \end{itemize}
   
 
@@ -213,17 +212,202 @@ use ISO_FORTRAN_ENV
 character(len=MAXLEN_ARG) :: arg1, arg2 
 call get_command_argument(1, VALUE=arg1) 
 call get_command_argument(2, VALUE=arg2) 
-read(arg1,'(i)') nxread(arg2,'(i)') ny
+read(arg1,'(i)') nx
+read(arg2,'(i)') ny
 \end{lstlisting}
 Getting an environment variable::
 \begin{lstlisting}[style=Fortran]
 use ISO_FORTRAN_ENV 
-character(len=100) :: myShellcall get_environment_variable('SHELL', myShell)
+character(len=100) :: myShell
+call get_environment_variable('SHELL', myShell)
 \end{lstlisting}
 }
 
 \end{frame}
 
+
+% --- Slide ---
+
+\begin{frame}{Array Constructor}
+
+\begin{itemize}
+ \item Can now use "[" and "]" rather than "(/", "/)" to construct arrays:\\
+ \quad x(1:5) = [0.,1.,2.,3.,4.]
+  \item Can also specify type \textbf{inside} constructor
+  \begin{itemize}
+  \item VALUE - character, intent(out) value of argument
+  \item LENGTH - number of characters in argument
+  \item STATUS - integer (success/failure)
+  \item Example command yields:
+  \begin{itemize}
+  \item GET\_COMMAND\_ARGUMENT(0,VALUE,LENGTH) yields \\
+  \quad VALUE="foo.x", LENGTH=5
+  \item GET\_COMMAND\_ARGUMENT(2,VALUE,LENGTH) yields \\
+  \quad VALUE="5", LENGTH=1
+  \end{itemize}
+ \end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{IMPORT statement}
+
+\scriptsize{
+A common pitfall when using F90/F95 is the declaration of an interface block than needs to "use" a derived type defined in the same module:
+\FortranStyle
+\begin{lstlisting}[style=Fortran]
+module foo
+   type bar
+      integer :: I,J
+   end type bar
+   interface
+      subroutine externFunc(B)
+         use foo, only: bar ! Not allowed?
+         type (bar) :: B
+      end subroutine externFunc
+  end interface
+...
+\end{lstlisting}
+}
+
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{IMPORT statement}
+
+\scriptsize{
+IMPORT is a new statement to address this issue.
+  \begin{itemize}
+  \item Very similar to USE statement.
+  \item Specifies all entities in host scoping unit that are accessible
+  \item \emph{Only} allowed in an interface body within a module
+  \end{itemize}
+ Exmaple:
+\FortranStyle
+\begin{lstlisting}[style=Fortran]
+...
+interface
+     subroutine externFunc(B)
+        import foo, only: bar
+        type (bar) :: B
+     end subroutine externFunc
+  end interface
+\end{lstlisting}
+}
+
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{PROTECTED attribute}
+
+\scriptsize{
+F2003 introduces the new attribute PROTECTED which provides a safety mechanism analogous to INTENT(IN)
+  \begin{itemize}
+  \item Specifies that the variable (or pointer status) may be altered only within the host module.
+  \item Property is recursive. I.e. if a variable of derived type is PROTECTED, all of its sub-objects also have the attribute
+  \item For pointers, only the association status is protected. The target may be modified elsewhere.
+  \end{itemize}
+ Example:
+\FortranStyle
+\begin{lstlisting}[style=Fortran]
+module foo
+private ! Good default
+real, public :: pi
+protected :: pi ! Allow value to be read
+...
+\end{lstlisting}
+}
+
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{VOLATILE attribute}
+
+\begin{itemize}
+ \item Introduced for a data object to indicate that its value might be modified by means external to the program.
+  \begin{itemize}
+  \item Non standard extensions (e.g. threads)
+  \item Card connected to external lab instrument
+  \end{itemize}
+  
+  \item Effect is that the compiler is required to not rely on values in cache or other temporary memory.
+  \item If an object has the VOLATILE attribute, so do all of its subobjects.
+  \item For pointers, attribute refers only to the association status, \emph{not} the target.
+\end{itemize}
+
+\end{frame}
+
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{Renaming operators}
+
+\begin{itemize}
+ \item F2003 extends the rename capability on USE statements to include renaming operators that are not intrinsic operators:\\
+ \FortranStyle
+\begin{lstlisting}[style=Fortran]
+USE a_mod, OPERATOR(.MyAdd.) => OPERATOR(.ADD.)
+\end{lstlisting}
+ \item This allows .MyAdd. to denote the operator .ADD. accessed from the module.
+ \end{itemize}
+
+\end{frame}
+
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{Changes to Intrinsic Functions}
+
+\begin{itemize}
+ \item Argument COUNT\_RATE for SYSTEM\_CLOCK() can now be of type real.
+ \begin{itemize}
+ \item Previously had to convert integer to compute reciprocal to determine elapsed time
+ \end{itemize}
+ \item  MAX, MAXLOC, MAXVAL, MIN, MINLOC, MINVAL have all been extend to apply to type CHARACTER
+ \item ATAN2, LOG, and SQRT have minor changes to take into account positive/negative zero for vendors that support the distinction.
+ \end{itemize}
+
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{Lengths of Names/Constants}
+
+\begin{itemize}
+ \item Variables may be declared with names of up to 63 characters
+ \item Statements of up to 256 lines are permitted.
+ \item Primarily aimed at supporting automatic code generation
+ \end{itemize}
+
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{Complex Constants}
+
+Named constants may be used to specify real or imaginary parts of a complex constant:
+ \FortranStyle
+\begin{lstlisting}[style=Fortran]
+REAL, PARAMETER :: pi = 3.1415926535897932384 
+COMPLEX :: C = (0.0,pi)
+\end{lstlisting}
+
+\end{frame}
 
 
 % --- Slide
