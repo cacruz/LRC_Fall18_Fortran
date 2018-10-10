@@ -11,6 +11,11 @@
 \usefonttheme[onlymath]{serif}
 \usecolortheme{beaver}
 \usepackage{textpos}
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+\usepackage{multicol}
+\usepackage{lipsum}
+\parskip 1ex
 
 \newcommand\FontAcolumn{\fontsize{6}{7.2}\selectfont}
 \newcommand\FontBcolumn{\fontsize{8}{7.2}\selectfont}
@@ -21,6 +26,38 @@
 \definecolor{gray75}{gray}{.75}
 \definecolor{gray75}{gray}{.45}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% This is used to add line number to source code %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstset{
+        language=fortran,        % language of the code
+        basicstyle=\small\ttfamily, % size of the fonts used for the code
+        %basicstyle=\normalsize, % size of the fonts used for the code
+        numbers=left,           % where to put line numbers
+        numberstyle=\tiny,     % size of the fonts used for line numbers
+        stepnumber=1, 
+        numbersep=8pt,
+        numberfirstline=false,
+        showstringspaces=false, % underline spaces within strings
+        aboveskip=-20pt,
+        numbersep=15pt,          % how far the line-numbers are from the code
+        frame=Ltb,         % addition of a left frame line on source
+        % code
+        framerule=0pt,
+        columns=fullflexible,
+        framextopmargin=3pt,
+        framexbottommargin=3pt,
+        framexleftmargin=0.4cm,
+        framesep=0pt,
+        rulesep=.4pt,
+        backgroundcolor=\color{gray97},
+        rulesepcolor=\color{black},
+        stringstyle=\ttfamily,
+        showstringspaces=false,
+        basicstyle=\ttfamily,
+        keywordstyle=\color{red}, % color keywords
+        commentstyle=\color{green}    % color comments
+        }
 \lstdefinestyle{Fortran}{language=[90]Fortran}
 
 \newcommand\FortranStyle
@@ -82,6 +119,9 @@ keepspaces,
 }
 }
 
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\newcommand{\light}[1]{\textcolor{lightgray}{#1}}
+    
 \def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
   \hbox{}\nobreak\hfil(#1)%
   \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
@@ -90,6 +130,7 @@ keepspaces,
 \newenvironment{aquote}[1]
   {\savebox\mybox{#1}\begin{quote}}
   {\signed{\usebox\mybox}\end{quote}}
+
   
 % items enclosed in square brackets are optional; explanation below
 \title{Variables and Data Types}
@@ -119,22 +160,237 @@ Bruce Van Aartsen}
 
 % --- Slide
 
-\begin{frame}{Slide}
+\frame[containsverbatim]{
+  \frametitle{Variables}
+\begin{itemize}
+\item Variables are used to hold values and then write mathematical expressions using them
+\item A variable can hold one value at a time.
+\item Variables must be declared at the start of the program.
+\item Each variable must be named. The variable name is how variables are referred to by the program.
+ \item A variable name must start with a letter, followed by letters,
+   numbers, or an underscore.
+ \item A variable name may not be longer than 32 characters.
+  \item Capital letters are treated the same way as lower-case letters
+\end{itemize}
+
+}
+
+\frame[containsverbatim]{
+  \frametitle{Examples of Variable Names}
+ Some valid variable names:
+\begin{verbatim}
+ x
+ today
+ next_month
+ summation10
+\end{verbatim}
+ Some invalid variable names:
+\begin{verbatim}
+ 1today
+ this_is_a_variable_name_with_way_way_too_many_characters_in_it
+ next@month
+ next month
+ today!
+\end{verbatim}
+}
+
+ \frame[containsverbatim]{
+  \frametitle{Variable Declaration }
+  \begin{semiverbatim}
+  \begin{lstlisting}
+   <type> :: <list of variable names>
+  \end{lstlisting}
+\end{semiverbatim}
+The type must be one of the predefined data types.
+}
+
+\frame[containsverbatim]{
+  \frametitle{Data Types}
+Fortran has five intrinsic data types:
+\begin{itemize}
+\item Integer
+\item Real
+\item Complex
+\item Logical
+ \item Character
+\end{itemize}
+You can derive your own data types as well.
+}
+
+\frame[containsverbatim]{
+  \frametitle{Integer Data Type}
+\begin{itemize}
+\item Can hold only integer values (whole numbers)
+\item You can specify the number of bytes using the \textit{kind}
+  specifier
+\item For integer division, no rounding will occur as the fractional part is truncated
+\end{itemize}
+
+}
 
 
-\end{frame}
 
-% --- Slide
+\frame[containsverbatim]{
+  \frametitle{Examples of Integer Data Type}
+  \begin{semiverbatim}
+  \begin{lstlisting}
+program testingInteger
+implicit none
 
-\begin{frame}{Example}
+   integer(kind =  2) :: shortval          !two byte integer
+   integer(kind =  4) :: longval           !four byte integer
+   integer(kind =  8) :: verylongval       ! eight byte integer
+   integer(kind = 16) :: veryverylongval   ! sixteen byte integer
+   integer            :: defval            ! default integer 
+        
+   print *, huge(shortval)
+   print *, huge(longval)
+   print *, huge(verylongval)
+   print *, huge(veryverylongval)
+   print *, huge(defval)
+end program testingInteger
+  \end{lstlisting}
+  \end{semiverbatim}
+}
 
-\end{frame}
+\frame[containsverbatim]{
+  \frametitle{Real Data Type}
+\begin{itemize}
+\item Also referred to as floating-point numbers, include both rational
+numbers and irrational numbers
+\item There are two different real types, the default \textit{real} type and \textit{double precision} type
+\item You can specify the precision of real using the \textit{kind} specifier
+\end{itemize}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Examples of Real Data Type}
+  \begin{semiverbatim}
+  \begin{lstlisting}
+program testingReal   
+implicit none  
+   real(kind=4):: real4Res  ! Define single precision real variable
+   real(kind=8):: real8Res ! Define double precision real variable
+   integer ::  intRes    ! Define integer variables
+   
+   ! floating point division
+   real4Res = 2.0/3.0
+   real8Res = 2.0/3.0 
+   intRes = 2/3
+   
+   print *, 'Single precision division:', real4Res
+   print *, 'Double precision division:', real8Res
+   print *, 'Integer division:', intRes
+end program testingReal 
+  \end{lstlisting}
+  \end{semiverbatim}
+}
 
 
-% --- Slide
+\frame[containsverbatim]{
+  \frametitle{Complex Type}
+\begin{itemize}
+\item Used to store complex number (number comprising a real number
+  and an imaginary number).
+ \item Not used extensively, but can be useful when needed.
+\end{itemize}
+}
 
-\begin{frame}{Exercise}
+\frame[containsverbatim]{
+  \frametitle{Example of Complex Type}
+  \begin{semiverbatim}
+  \begin{lstlisting}
+program testingComplex   
+implicit none  
+   real :: x, y
+   complex :: cx1, cx2, cx3
 
-\end{frame}
+   x   = 2.67
+   y   = -0.349
+   cx1 = (3.0, 5.0)            ! cx1 = 3.0 + 5.0i
+   cx2 = cmplx (1.0/2.0, -7.0) ! cx2 = 0.5 – 7.0i 
+   cx3 = cmplx (x, y)          ! cx3 = x + yi
+   print *, 'cx1:     ', cx1
+   print *, 'cx2:     ', cx2
+   print *, 'cx3:     ', cx3
+   print *, 'cx1+cx3: ', cx1+cx3
+   print *, 'cx1-cx2: ', cx1-cx2
+   print *, 'cx1*cx2: ', cx1*cx2
+   print *, 'cx1/cx2: ', cx1/cx2
+end program testingComplex 
+  \end{lstlisting}
+  \end{semiverbatim}
+}
+
+
+\frame[containsverbatim]{
+  \frametitle{Logical Type}
+  \begin{itemize}
+   \item Stores logical variable
+\item Takes two possible values: \textit{.true.} or \textit{.false.}.
+\end{itemize}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Example of Logical Type}
+\begin{semiverbatim}
+  \begin{lstlisting}
+program testingLogical   
+implicit none  
+INTEGER :: YEAR
+LOGICAL :: LEAP_FLAG
+
+YEAR = 2004
+LEAP_FLAG = .FALSE.
+IF (MOD(YEAR,4) .EQ. 0)   LEAP_FLAG = .TRUE.
+IF (MOD(YEAR,100) .EQ. 0) LEAP_FLAG = .FALSE.
+IF (MOD(YEAR,400) .EQ. 0) LEAP_FLAG = .TRUE.
+
+PRINT*, 'Is ', YEAR, ' a leap year? ', LEAP_FLAG
+end program testingLogical 
+  \end{lstlisting}
+  \end{semiverbatim}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Character Type}
+\begin{itemize}
+\item Stores a character (symbol like a letter, numerical digit, or
+  punctuation) and a string (sequence or set of characters).
+  \item Characters and strings are typically enclosed in quotes.
+  \item The length of the string can be specified by \textit{len}
+    specifier
+\item If no length is specified, then \textit{len=1}.
+\end{itemize}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Examples of Character Data Type}
+  \begin{semiverbatim}
+  \begin{lstlisting}
+program testingCharacter
+implicit none
+integer, parameter :: maxLengthChar = 50
+character (len = maxLengthChar) :: stationName
+character (len = maxLengthChar) :: welcomeMsg
+character (len = maxLengthChar) :: location
+character                       :: oneChar
+
+welcomeMsg = '       Welcome to the Fortran Tutorial    '
+location = 'Hampton, Virginia''
+stationName = 'Blodgett'
+oneChar     = 'T'
+print *, 'Message - 1:     ', welcomeMsg
+print *, 'Message - 2:     ', TRIM(welcomeMsg)
+print *, 'Message - 3:     ', TRIM(welcomeMsg)//' in '//TRIM(location)
+print *, 'Name of station: ', stationName
+print *, oneChar
+end program testingCharacter
+  \end{lstlisting}
+  \end{semiverbatim}
+}
+
+
 
 \end{document}
+
