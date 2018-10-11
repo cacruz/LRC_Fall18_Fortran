@@ -1,0 +1,291 @@
+\documentclass[11pt]{beamer}
+\setbeamertemplate{navigation symbols}{}
+ \setbeamercovered{transparent}
+\usepackage{listings}
+%\usetheme{Copenhagen}
+\usetheme{Singapore}
+%\usetheme{Madrid}
+%\usetheme{Hannover}
+%\usetheme{boxes}
+%\usetheme{Boadilla}
+\usefonttheme[onlymath]{serif}
+\usecolortheme{beaver}
+\usepackage{textpos}
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+\usepackage{multicol}
+\usepackage{lipsum}
+\parskip 1ex
+
+\newcommand\FontAcolumn{\fontsize{6}{7.2}\selectfont}
+\newcommand\FontBcolumn{\fontsize{8}{7.2}\selectfont}
+\newcommand\FontCcolumn{\fontsize{10}{7.2}\selectfont}
+\newcommand\FontDcolumn{\fontsize{11}{7.2}\selectfont}
+
+\definecolor{gray97}{gray}{.97}
+\definecolor{gray75}{gray}{.75}
+\definecolor{gray75}{gray}{.45}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% This is used to add line number to source code %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstset{
+        language=fortran,        % language of the code
+        basicstyle=\small\ttfamily, % size of the fonts used for the code
+        %basicstyle=\normalsize, % size of the fonts used for the code
+        numbers=left,           % where to put line numbers
+        numberstyle=\tiny,     % size of the fonts used for line numbers
+        stepnumber=1, 
+        numbersep=8pt,
+        numberfirstline=false,
+        showstringspaces=false, % underline spaces within strings
+        aboveskip=-20pt,
+        numbersep=15pt,          % how far the line-numbers are from the code
+        frame=Ltb,         % addition of a left frame line on source
+        % code
+        framerule=0pt,
+        columns=fullflexible,
+        framextopmargin=3pt,
+        framexbottommargin=3pt,
+        framexleftmargin=0.4cm,
+        framesep=0pt,
+        rulesep=.4pt,
+        backgroundcolor=\color{gray97},
+        rulesepcolor=\color{black},
+        stringstyle=\ttfamily,
+        showstringspaces=false,
+        basicstyle=\ttfamily,
+        keywordstyle=\color{red}, % color keywords
+        commentstyle=\color{green}    % color comments
+        }
+\lstdefinestyle{Fortran}{language=[90]Fortran}
+
+\newcommand\FortranStyle
+{
+\lstset{
+frame=Ltb,
+framerule=0pt,
+columns=fullflexible,
+aboveskip=0.5cm,
+framextopmargin=3pt,
+framexbottommargin=3pt,
+framexleftmargin=0.4cm,
+framesep=0pt,
+rulesep=.4pt,
+backgroundcolor=\color{gray97},
+rulesepcolor=\color{black},
+stringstyle=\ttfamily,
+showstringspaces=false,
+basicstyle=\ttfamily,
+commentstyle=\color{green},
+keywordstyle=\color{red},
+numbers=left,
+numbersep=15pt,
+numberstyle=\tiny,
+numberfirstline=false,
+breaklines=true,
+ tabsize=2,
+ extendedchars=true,
+keepspaces,
+}
+}
+
+\newcommand\FortranStyleA
+{
+\lstset{
+frame=Ltb,
+framerule=0pt,
+columns=fullflexible,
+aboveskip=0.5cm,
+framextopmargin=3pt,
+framexbottommargin=3pt,
+framexleftmargin=0.4cm,
+framesep=0pt,
+rulesep=.4pt,
+backgroundcolor=\color{gray97},
+rulesepcolor=\color{black},
+stringstyle=\ttfamily,
+showstringspaces=false,
+basicstyle=\ttfamily,
+commentstyle=\color{green},
+keywordstyle=\color{red},
+numbersep=15pt,
+numberstyle=\tiny,
+numberfirstline=false,
+breaklines=true,
+ tabsize=2,
+ extendedchars=true,
+keepspaces,
+}
+}
+
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\newcommand{\light}[1]{\textcolor{lightgray}{#1}}
+    
+\def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
+  \hbox{}\nobreak\hfil(#1)%
+  \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}}
+  {\signed{\usebox\mybox}\end{quote}}
+
+  
+% items enclosed in square brackets are optional; explanation below
+\title{Functions and Subroutines}
+%\subtitle{Introduction}
+\author{Carlos Cruz\\
+Jules Kouatchou\\
+Bruce Van Aartsen}
+\institute{
+  NASA GSFC Code 606 (ASTG)\\
+  Greenbelt, Maryland 20771\\[1ex]
+%  \texttt{carlos.a.cruz@nasa.gov}
+}
+\date{October 24, 2018}
+
+\begin{document}
+
+% --- Title page ---
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\logo{%
+  \includegraphics[width=1cm,height=1cm,keepaspectratio]{../../shared/nasa-ball.png}%
+  \hspace{\dimexpr\paperwidth-2cm-5pt}%
+  \includegraphics[width=1cm,height=1cm,keepaspectratio]{../../shared/ssai-logo.png}%
+}
+
+% --- Slide
+
+\frame[containsverbatim]{
+  \frametitle{Rationale}
+  \begin{itemize}
+    \item Actions/operations which have to be performed more than once
+    \item One big problem split into clearer and simpler sub-problems
+  \end{itemize}
+
+ }
+
+\frame[containsverbatim]{
+  \frametitle{Functions}
+  \begin{itemize}
+    \item Special type of Fortran subprogram that is expected to
+      return a single result or answer
+    \item Typically accept some kind of input information and based on that information, return a result.
+  \end{itemize}
+
+ }
+
+ \frame[containsverbatim]{
+  \frametitle{Syntax for a User-Defined Function }
+  \begin{semiverbatim}
+  \begin{lstlisting}
+ function <name> ( <arguments> ) result(returnedValue)
+   <declarations>
+   <type> :: returnedValue
+   <body of function>
+   returnedValue = expression
+ end function <name>
+  \end{lstlisting}
+\end{semiverbatim}
+The $<type>$ is one of the Fortran data types: real, integer, logical, character, or complex.
+}
+
+ \frame[containsverbatim]{
+  \frametitle{Example of Function: Leap Year }
+  \begin{semiverbatim}
+  \begin{lstlisting}
+      FUNCTION calcAverage (a, b, c) result(av)
+       implicit none
+       real(kind=4), intent(in) :: a, b, c
+       real(kind=4)             :: av
+
+       av = (a + b + c)/3.0
+
+      END FUNCTION calcAverage
+  \end{lstlisting}
+\end{semiverbatim}
+
+}
+
+ \frame[containsverbatim]{
+   \frametitle{Few Fortran Intrinsic Functions}
+
+\begin{verbatim}
+abs      int      trim         aimag     maxval
+exp      nint     len          real      minval
+log      real     len_trim     cmplx     sum
+exp      mod
+cos
+sin
+tan
+acos
+asin
+atan
+\end{verbatim}
+   }
+
+
+
+
+\frame[containsverbatim]{
+  \frametitle{Subroutines}
+  \begin{itemize}
+    \item Accept some kind of input information and based on that
+      information, return a result or series of results.
+    \item Each of the passed arguments must be declared and the
+      declaration must include the type and the intent.
+    \item The arguments in the calling routine and the subroutine must match and are matched up by position.
+  \end{itemize}
+
+ }
+
+ \frame[containsverbatim]{
+  \frametitle{Syntax for a Subroutine }
+  \begin{semiverbatim}
+  \begin{lstlisting}
+ subroutine <name> ( <arguments> )
+    <declarations>
+    <body of subroutine>
+    return
+ end subroutine <name>
+  \end{lstlisting}
+\end{semiverbatim}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Example of Subroutine: Compute Sum/Average of Numbers }
+  \begin{semiverbatim}
+  \begin{lstlisting}
+       subroutine sumAverage (a, b, c, sm, av)
+       real(kind=4), intent(in) :: a, b, c
+       real(kind=4), intent(out) :: sm, av
+
+       sm = a + b + c
+       av = sm / 3.0
+
+       return
+       end subroutine sumAverage
+  \end{lstlisting}
+\end{semiverbatim}
+}
+
+
+\frame[containsverbatim]{
+  \frametitle{Exercise }
+Write a subroutine that returns the sum, the average and the standard deviation
+of 5 numbers.
+\begin{eqnarray}
+s & = & \sum_{i=1}^{5}{a_i} \nonumber \\
+\mu & =& \frac{s}{5} \nonumber \\
+std & = & \frac{1}{5} \sum_{i=1}^{5}{(a_i}-\mu)^2}  \nonumber
+\end{eqnarray}
+
+}
+
+
+\end{document}
+
