@@ -26,6 +26,40 @@
 \definecolor{gray75}{gray}{.75}
 \definecolor{gray75}{gray}{.45}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% This is used to add line number to source code %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstset{
+        language=fortran,        % language of the code
+        basicstyle=\small\ttfamily, % size of the fonts used for the code
+        %basicstyle=\normalsize, % size of the fonts used for the code
+        numbers=left,           % where to put line numbers
+        numberstyle=\tiny,     % size of the fonts used for line numbers
+        stepnumber=1, 
+        numbersep=8pt,
+        numberfirstline=false,
+        showstringspaces=false, % underline spaces within strings
+        aboveskip=-20pt,
+        numbersep=15pt,          % how far the line-numbers are from the code
+        frame=Ltb,         % addition of a left frame line on source
+        % code
+        framerule=0pt,
+        columns=fullflexible,
+        framextopmargin=3pt,
+        framexbottommargin=3pt,
+        framexleftmargin=0.4cm,
+        framesep=0pt,
+        rulesep=.4pt,
+        backgroundcolor=\color{gray97},
+        rulesepcolor=\color{black},
+        stringstyle=\ttfamily,
+        showstringspaces=false,
+        basicstyle=\ttfamily,
+        keywordstyle=\color{red}, % color keywords
+        commentstyle=\color{green}    % color comments
+        }
+
+
 \lstdefinestyle{Fortran}{language=[90]Fortran}
 
 \newcommand\FortranStyle
@@ -140,20 +174,381 @@ keepspaces,
 \end{frame}
 
 
-% --- Slide ---
+\frame[containsverbatim]{
+  \frametitle{Introduction }
+  \begin{itemize}
+   \item Fotran provides standards for accessing libraries and
+     procedures developed in C
+    \item Fotran also provides standards for accessing Fortran libraries and
+      procedures developed from  C
+    \item Interoperability enforced by requirements on Fortran syntax
+    \item Use of these features requires some familiarity with both C
+      and Fortran
+   \end{itemize}
+ }
 
-\begin{frame}{Motivation}
+ \frame[containsverbatim]{
+  \frametitle{ISO\_C\_BINDING}
+Intrinsic module that provides:
+  \begin{itemize}
+   \item Named constants for declaring Fortran data which interoperates with C data
+    \item Small number of procedures for managing pointers and addresses
+   \end{itemize}
+ 
+ To avoid naming conflicts it is recommended that the ONLY options is
+ used in the USE statement.
+}
 
 
-\end{frame}
+\frame[containsverbatim]{
+  \frametitle{Intrinsic Data Types}
+For each C data type provided by the vendor there is an equivalent named constant in
+ISO\_C\_BINDING
+  \begin{itemize}
+   \item Value of the named constant specifies the \textbf{KIND} for the corresponding Fortran data type
+    \item Support for: INTEGER, REAL, COMPLEX, LOGICAL, and CHARACTER types
+   \end{itemize}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Intrinsic Types}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline \hline
+\textbf{Fortran Type} & \textbf{Named constant from} & \textbf{C Type} \\
+     & \textbf{C type ISO\_C\_BINDING} &     \\  \hline \hline
+INTEGER & C\_INT & int \\ \hline
+INTEGER & C\_LONG & short int  \\ \hline
+INTEGER & C\_INT32 & int32\_t  \\ \hline
+  INTEGER & C\_INT64 & int64\_t  \\ \hline
+REAL & C\_FLOAT & float  \\ \hline
+REAL & C\_DOUBLE & double  \\ \hline
+COMPLEX & C\_FLOAT\_COMPLEX & float\_Complex  \\ \hline
+LOGICAL & C\_BOOL & \_Bool  \\ \hline
+CHARACTER & C\_CHAR \& char \\ \hline \hline
+\end{tabular} 
+\end{center}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Example of Declarations }
+  Example of Fortran declaration interoperable with C double
+  \begin{semiverbatim}
+  \begin{lstlisting}
+   use, intrinsic :: ISO_C_Binding, only: C_int, C_char, C_double
+   IMPLICIT NONE
+
+   integer, parameter :: maxLengthChar= 100
+
+   character(kind=C_CHAR), DIMENSION(*) :: stationName
+   real(KIND=C_FLOAT) :: latitude
+   real(KIND=C_FLOAT) :: longitude
+\end{lstlisting}
+\end{semiverbatim}
+}
 
 
+\frame[containsverbatim]{
+  \frametitle{Intrinsic Procedures}
+  \begin{itemize}
+   \item \textbf{C\_LOC} (var) $\rightarrow$ Returns C address (type C\_PTR) of var
+   \item \textbf{C\_FUNLOC} (proc) $\rightarrow$ Returns C address (type C\_FUNPTR) of procedure
+   \item \textbf{C\_ASSOCIATED} (cPtr1 [, cPtr2]) $\rightarrow$
+     Returns false if cPtr1 is a null C pointer or if cPtr2 is present
+     with a different value
+   \item \textbf{C\_F\_POINTER} (cPtr1, fPtr [, shape]) $\rightarrow$
+     Associates Fortran pointer, fPtr1, with address cPtr1 (type
+     C\_PTR).  Shape is required when fPtr1 is an array pointer.
+    \item \textbf{C\_F\_PROCPOINTER} (cPtr1, fPtr)  $\rightarrow$  Associates Fortran procedure pointer, fPtr1 with the address of
+interoperable C procedure cPtr1 (type C\_FUNPTR)
+   \end{itemize}
+ }
 
-% --- Slide
+ \frame[containsverbatim]{
+  \frametitle{Interoperable Procedures}
+  \begin{itemize}
+  \item A Fortran procedure is interoperable if
+    \begin{itemize}
+     \item It has an explicit interface
+     \item It has been declared with the BIND attribute
+      \item The number of dummy arguments is equal to the number of formal
+parameters in the prototype and are in the same relative positions as the
+C parameter list
+      \item All dummy arguments are interoperable
+    \end{itemize}
+  \item Return values
+    \begin{itemize}
+    \item An interoperable Fortran function must have a result that is scalar and
+      interoperable
+    \item For a subroutine, the C prototype must have a void result
+    \end{itemize}
+  \item Caveats
+    \begin{itemize}
+  \item Interoperable functions cannot return array values
+   \item Fortran procedures cannot interoperate with C functions that take a
+variable number of arguments (the C language specification allows this)
+    \end{itemize}
+      \end{itemize}
+ }
 
-\begin{frame}[fragile]
-\frametitle{Conclusion}
+\frame[containsverbatim]{
+  \frametitle{Example of Interoperable Fortran Procedure Interface }
+  {\small
+\begin{semiverbatim}
+  \begin{lstlisting}
+INTERFACE
+   FUNCTION func (i, j, k, l, m), BIND (C, name=''C_Func'')
+       USE, INTRINSIC :: ISO_C_BINDING
+       INTEGER (C_SHORT) :: func
+       INTEGER (C_INT), VALUE :: i
+       REAL (C_DOUBLE) :: j
+       INTEGER (C_INT) :: k, l(10)
+       TYPE (C_PTR), VALUE :: m
+   END FUNCTION func
+END INTERFACE
+…
+short C_Func (int i, double *j, int *k, int l[10], void *m)
+\end{lstlisting}
+\end{semiverbatim}
+}
+}
 
-\end{frame}
+\frame[containsverbatim]{
+  \frametitle{Binding Labels for Procedures}
+  A \textbf{binding label} is a value that specifies the name by
+which a procedure with the BIND attribute is known
+  \begin{itemize}
+  \item Has global scope
+    \item By default, it is the lower-case version of the Fortran name
+   \end{itemize}
+ }
+
+ \frame[containsverbatim]{
+  \frametitle{Interoperable Data}
+  Fortran data is interoperable if an equivalent
+data declaration can be made in C and the
+data is said to be interoperable
+  \begin{itemize}
+  \item Scalar and array variables are interoperable
+    \item Dynamic arrays can be passed between the two
+      languages
+    \item The BIND attribute is required for a Fortran derived
+      type to be interoperable
+    \item C variables with external linkage can interoperate
+with Fortran common blocks or module variables
+that have the BIND attribute
+   \end{itemize}
+ }
+
+ \frame[containsverbatim]{
+  \frametitle{Interoperability of Variables}
+  \begin{itemize}
+  \item Fortran scalars are interoperable if
+    \begin{itemize}
+    \item the type and type parameters are interoperable with a scalar
+      C variable
+      \item they are not declared as pointers nor have the allocatable attribute
+     \end{itemize}
+   \item Fortran arrays are interoperable if
+        \begin{itemize}
+    \item The type and type parameters are interoperable
+      \item they are of explicit shape or assumed size
+      \end{itemize}
+      \item Fortran arrays interoperate with C arrays of the same type, type parameters and shape,
+but with reversed subscripts
+   \end{itemize}
+ }
+
+ \frame[containsverbatim]{
+  \frametitle{Example of Interoperability of Variables}
+  \begin{semiverbatim}
+  \begin{lstlisting}
+real :: A(3,4)
+real :: A(3,*)
+real :: A(:,:)   ! not allowed
+
+INTEGER :: A(18, 3:7, *)
+…
+int b[] [5] [18]
+\end{lstlisting}
+\end{semiverbatim}
+}
+
+
+ \frame[containsverbatim]{
+  \frametitle{Derived Types}
+  \begin{itemize}
+  \item Interoperable Fortran derived types must
+    \begin{itemize}
+    \item Specify the BIND (C) attribute
+    \item Have the same number of components as the C struct type
+     \item Have components with type and type parameters that are
+interoperable with the types of the corresponding components of the
+C struct type
+     \end{itemize}
+   \item Components of the Fortran derived type
+        \begin{itemize}
+    \item Correspond to the C struct type components declared in the same
+relative position
+      \item Corresponding components do not need to have the same name
+      \end{itemize}
+   \end{itemize}
+ }
+
+  \frame[containsverbatim]{
+  \frametitle{Example of Derived Type}
+  \begin{semiverbatim}
+  \begin{lstlisting}
+TYPE, BIND (C) :: fType
+    INTEGER (C_INT) :: i, j
+    REAL (C_FLOAT) :: s
+END TYPE fType
+…
+typedef struct {
+    int m, n;
+    float r;
+} cType
+\end{lstlisting}
+\end{semiverbatim}
+}
+
+
+\frame[containsverbatim]{
+  \frametitle{Global Data}
+  \begin{itemize}
+ \item A C variable with external linkage can interoperate
+with a Fortran common block or variable that has the
+BIND attribute
+\item C variable with external linkage interoperates with a
+common block specified in a BIND statement in one of
+two ways:
+  \begin{itemize}
+   \item The C variable is a struct type and the elements are
+interoperable with the members of the common block
+   \item Or the common block contains only one interoperable
+     variable
+   \end{itemize}
+\item Only one variable can be associated with a C variable
+with external linkage
+   \end{itemize}
+ }
+
+   \frame[containsverbatim]{
+  \frametitle{Example of Global Data}
+  \begin{semiverbatim}
+  \begin{lstlisting}
+use ISO_C_BINDING
+COMMON /COM/ r, s
+REAL(C_FLOAT) :: r, s
+BIND(C) :: /COM/
+…
+struct {
+   float r, s;
+} com; /* external */
+
+void setter() {
+   com.r = 3;
+   com.s = 4;
+}
+\end{lstlisting}
+\end{semiverbatim}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Array Variables}
+  \begin{itemize}
+\item A Fortran array of rank one is not interoperable with a
+multidimensional C array
+\item Polymorphic, allocatable, and pointer arrays are never
+interoperable
+\item A Fortran array of type character with a kind type of
+C\_CHAR is interoperable with a C string (C null
+character as last element of the array)
+\begin{itemize}
+\item ISO\_C\_BINDING provides the constant C\_NULL\_CHAR
+     \end{itemize}
+   \end{itemize}
+ }
+
+
+ \frame[containsverbatim]{
+  \frametitle{Dynamic Arrays}
+  \begin{itemize}
+\item  C pointers are the mechanism for passing dynamic
+  arrays between the two languages
+    \begin{itemize}
+\item an allocated allocatable Fortran array can be passed to C
+\item an array allocated in C can be passed to a Fortran pointer
+\item a Fortran pointer target or assumed-shape array (no bounds
+specified) cannot be passed to C
+   \end{itemize}
+\item ISO\_C\_BINDING provides
+  \begin{itemize}
+    \item C\_PTR is the derived type for interoperating with any C
+      object pointer type
+    \item C\_NULL\_PTR is the named constant of type C\_PTR with the value NULL in C
+   \end{itemize}
+   \end{itemize}
+ }
+
+
+    \frame[containsverbatim]{
+  \frametitle{Example of Interoperable Dynamic Arrays - C}
+{\tiny
+\begin{semiverbatim}
+  \begin{lstlisting}
+typedef struct {
+   int lenc, lenf;
+   float *c, *f;
+} pass;
+
+int main () {
+…
+pass *arrays=(pass*)malloc(sizeof(pass));
+(*arrays).lenc = 2;
+arrays->c =malloc((*arrays).lenc*sizeof(float));
+a[0] = 10.0;
+a[1] = 20.0;
+
+for(i=0;i<(*arrays).lenc;i++) {
+   *(arrays->c+i)=a[i];
+}
+/* Calling Fortran routine "simulation" */
+simulation(arrays);
+\end{lstlisting}
+\end{semiverbatim}
+}
+}
+
+   \frame[containsverbatim]{
+  \frametitle{Example of Interoperable Dynamic Arrays - Fortran}
+  \begin{semiverbatim}
+  \begin{lstlisting}
+SUBROUTINE simulation(arrays) bind(c)
+…
+
+TYPE, BIND(c) :: pass
+   integer (C_INT) :: lenc, lenf
+   TYPE (C_PTR) :: c, f
+END TYPE pass
+
+TYPE (pass), INTENT(INOUT) :: arrays
+REAL (C_FLOAT), POINTER : cArray (:)
+CALL C_F_POINTER(arrays%c,cArray, (/arrays%lenc/))
+print*, cArray
+
+\end{lstlisting}
+\end{semiverbatim}
+}
+ 
+\frame[containsverbatim]{
+  \frametitle{Exercise}
+  \begin{itemize}
+   \item Write a C subroutine that computes the averrage and standard
+     deviation of an array with $n$ entries.
+   \item Call the subroutine within Fortran.
+   \end{itemize}
+ }
 
 \end{document}
