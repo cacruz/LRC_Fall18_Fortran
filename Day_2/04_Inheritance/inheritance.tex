@@ -173,7 +173,11 @@ The following example defines a derived type with 2 type bound procedures comput
 \FortranStyle
 
  \begin{lstlisting}[style=Fortran]
-type myType   real :: valuecontains   procedure :: compute    procedure :: retrieve
+type myType
+   real :: value
+contains
+   procedure :: compute
+    procedure :: retrieve
 end type myType
 \end{lstlisting}
 \begin{itemize}
@@ -184,46 +188,69 @@ end type myType
 
 \end{frame}
 
-
 % --- Slide
 
 \begin{frame}[fragile]
 \frametitle{Example}
 
 
-\begin{columns}[onlytextwidth,t]
-    \begin{column}{0.48\textwidth}
-\tiny{
-\begin{lstlisting}[style=Fortran]
-module myType_mod   private   public :: myType 
-   type myType        real :: myValue(4) = 0.0   contains        procedure :: write        procedure :: reset   end type myType 
-contains   subroutine write (this, unit)   class(mytype) :: this      integer, optional :: unit      if(present(unit)) then         write (unit, *) this % myValue      else         print *, this%myvalue       endif   end subroutine write...
-\end{lstlisting}
-}
-  \end{column}
-  \begin{column}{0.48\textwidth}
+\FortranStyle
+
+\begin{columns}
+\begin{column}{0.4\textwidth}
   
-\tiny{
+ \FontAcolumn
+
+\begin{lstlisting}[style=Fortran]
+module myType_mod
+   private  ! information hiding
+   public :: myType ! except
+   type myType
+        real :: myValue(4) = 0.0
+   contains
+        procedure :: write
+        procedure :: reset
+   end type myType 
+contains
+   subroutine write (this, unit)
+   class(mytype) :: this
+      integer, optional :: unit
+      if(present(unit)) then
+         write (unit, *) this % myValue
+      else
+         print *, this%myvalue
+       endif
+   end subroutine write
+...
+\end{lstlisting}
+
+  \end{column}
+  \begin{column}{0.4\textwidth}
+
+ \FontAcolumn
+  
 \begin{lstlisting}[style=Fortran]
 ...
-subroutine reset(variable)     class(mytype) :: variablevariable%myvalue = 0.0 end subroutine resetend module myType_mod
+subroutine reset(variable)
+     class(mytype) :: variable
+variable%myvalue = 0.0 end subroutine reset
+end module myType_mod
 \end{lstlisting}
-}
-\scriptsize{
-\begin{itemize}
-\item Usage:\\
+
+ \FontBcolumn
+Usage:\\
 use mytype\_mod\\
 type(myType) :: var\\
 ...\\
 call var\%write(unit=6)\\
 call var\%reset()\\
-\end{itemize}
-}
+
   \end{column}
 \end{columns}
  
 
 \end{frame}
+
 
 % --- Slide
 
@@ -259,14 +286,15 @@ By default, type-bound procedures pass the object as the first argument.
 
 \begin{itemize}
 \item Type-bound procedures can specify an alternative public name using a mechanism analogous to that for the module ONLY clause:\\
-  \quad procedure :: write $=>$ writeInternal\\
+  \quad procedure :: write \textcolor{blue}{$=>$} writeInternal\\
   \quad ...\\
   \quad call thing \% method(...)  $\leftarrow$ No object is passed \\
   
-  \item Similarly, an external name can be overloaded for multiple interfaces with the GENERIC statement:\\
+  \item Similarly, an external name can be \textbf{overloaded} for multiple interfaces with the GENERIC statement:\\
   \quad type myType\\
   \quad contains\\
-  \quad \quad procedure :: addInteger\\  \quad \quad procedure :: addReal\\
+  \quad \quad procedure :: addInteger\\
+  \quad \quad procedure :: addReal\\
   \quad \quad \textcolor{blue}{generic} :: add $=> $ addReal, addInteger\\
   \quad end type\\
 \end{itemize}
@@ -288,7 +316,7 @@ Fortran 2003 introduces OOP inheritance via the EXTENDS attribute for user defin
 \item Implementation is designed to be efficient such that offsets for components and type-bound procedures can be computed at compile time. ("single lookup")
 
 \end{itemize}
-With type extension, a developer may add new components and type-bound procedures to an existing derived type even \emph{without} access to the source code for that type.
+With \emph{type extension}, a developer may add new components and type-bound procedures to an existing derived type even \emph{without} access to the source code for that type.
 \end{frame}
 
 % --- Slide
@@ -297,11 +325,11 @@ With type extension, a developer may add new components and type-bound procedure
 \frametitle{Inheritance Terminology}
 
 \begin{itemize}
-\item A type is considered to be extensible if it is:
-  \begin{itemize}
-  \item Not a SEQUENCE type
-  \item Not BIND(C)
-  \end{itemize}
+%\item A type is considered to be extensible if it is:
+%  \begin{itemize}
+%  \item Not a SEQUENCE type
+%  \item Not BIND(C)
+%  \end{itemize}
 
 \item An extensible type without the EXTENDS attribute is considered to be a 'base type'.
   \begin{itemize}
@@ -328,12 +356,18 @@ With type extension, a developer may add new components and type-bound procedure
 \FortranStyle
 
  \begin{lstlisting}[style=Fortran]
-type Location2D   real :: latitude, longitudeend type Location2D
+type Location2D
+   real :: latitude, longitude
+end type Location2D
 
 type, EXTENDS (Location2D) :: Location3D 
-   real :: pressureHeightend type Location3D
+   real :: pressureHeight
+end type Location3D
    ...
-type (Location3D) :: locationlat = location % latitudelon = location % longitudeheight = location % pressureHeight
+type (Location3D) :: location
+lat = location % latitude
+lon = location % longitude
+height = location % pressureHeight
 \end{lstlisting}
 
 
@@ -345,17 +379,19 @@ type (Location3D) :: locationlat = location % latitudelon = location % longitu
 \frametitle{The Parent Component}
 
 \begin{itemize}
-\item Every extended type has an implicit component associated with the parent type
+\item Every extended type has an \emph{implicit component} associated with the parent type
   \begin{itemize}
   \item The component name is the type name of the parent.
-  \item Provides multiple mechanisms to access components in parent type
+  \item Provides \emph{multiple} mechanisms to access components in parent type
   \end{itemize}
 \end{itemize}
 
 From the previous example we could do:
 \FortranStyle
  \begin{lstlisting}[style=Fortran]
-type (Location2D) :: latLonlatLon = location % Location2Dlat = location % Location2D % latitude
+type (Location2D) :: latLon
+latLon = location % Location2D
+lat = location % Location2D % latitude
 \end{lstlisting}
 
 \end{frame}
@@ -371,7 +407,7 @@ type (Location2D) :: latLonlatLon = location % Location2Dlat = location % Loca
 \item An extended type can \emph{override} a type-bound procedure in the parent - specifying new behavior in the extended type.
   \begin{itemize}
   \item The keyword \textcolor{blue}{NON\_OVERRIDABLE} can be used to prohibit extended classes from overriding behavior:\\
-  \quad procedure, \textcolor{blue}{NON\_OVERRIDABLE} :: foo
+  \quad \emph{procedure, \textcolor{blue}{NON\_OVERRIDABLE} :: foo}
   \end{itemize}
 \end{itemize}
 
@@ -386,13 +422,23 @@ type (Location2D) :: latLonlatLon = location % Location2Dlat = location % Loca
 \scriptsize{
 \FortranStyle
  \begin{lstlisting}[style=Fortran]
-type Square   real :: lengthcontains   procedure :: area => squareAreaend type Square
+type square
+   real :: length
+contains
+   procedure :: area => square_area
+end type square
 
-type, extends(Square) :: rectangle   real :: widthcontains   procedure :: area => rectangleAreaend type Rectangler
+type, extends(square) :: rectangle  ! inherits area
+   real :: width
+contains
+   procedure :: area => rectangle_area  ! overriding area
+end type rectangle
 
-Real function squareArea(this)   squareArea = (this % length) ** 2
+real function square_area(this)
+   square_area = (this % length) ** 2
 
-Real function rectangleArea(this)   rectangleArea = (this % length) * (this % width)
+real function rectangle_area(this)
+   rectangle_area = (this % length) * (this % width)
 \end{lstlisting}
 }
 
@@ -422,14 +468,55 @@ Real function rectangleArea(this)   rectangleArea = (this % length) * (this % w
 \scriptsize{
 \FortranStyle
  \begin{lstlisting}[style=Fortran]
-type, ABSTRACT :: AbstractShape
-contains   procedure (AreaInterface), DEFERRED :: area 
-end type AbstractShape
+type, ABSTRACT :: abstract_shape
+contains
+   procedure (area_interface), DEFERRED :: area 
+end type abstract_shape
 ...
-abstract interface   subroutine AreaInterface(obj)      import AbstractShape      class (AbstractShape) :: obj   end subroutine AreaInterfaceend interface
+ABSTRACT interface
+   subroutine area_interface(obj)
+      import abstract_shape
+      class (abstract_shape) :: obj
+   end subroutine area_interface
+end interface
 ...
-type, extends(AbstractShape) :: Square   real :: lengthcontains   procedure :: area => squareArea !  Provide concreteend type Square
+type, EXTENDS(abstract_shape) :: square
+   real :: length
+contains
+   procedure :: area => square_area !  Provide concrete
+end type square
 \end{lstlisting}
+}
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Shape Class Exercise}
+
+Let's look at the shape class files. Then
+\begin{itemize}
+\item Create a new file triangle\_mod.F90 that contains
+\bi
+\item a constructor that creates a triangle object.
+\item a function that calculates the area of a triangle.
+\ei
+\item edit test\_shapes.F90 and add code to print the result
+ \end{itemize}
+Then build the executable and run the code using Makefile_exercise.
+
+\end{frame}
+
+% --- Slide ---
+\begin{frame}[fragile]
+\frametitle{}
+
+
+\centering{
+\huge{
+Shape Class
+}
 }
 
 \end{frame}
