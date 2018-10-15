@@ -7,7 +7,9 @@
    real :: Y(2,2) = -999.0
    real, dimension(2,2) :: X  = reshape([1.0,3.0,2.0,4.0],[2,2])
    real, dimension(2,2) :: ID = reshape([2.0,0.0,0.0,2.0],[2,2])
-   
+
+   real, dimension(2,3) :: g
+
    integer i, ierr
    integer, dimension(10) :: ints
    character(len=5), dimension(3) :: colors
@@ -89,4 +91,13 @@
    print *, 'A(V): ', A
    print *,'-------------------------------------------------'
 
+   print *,'Where construct:'
+   g = reshape( (/ 1.,0.,3.,0.,5.,0. /), shape(g))
+   where (g /= 0.)
+      g = 1./g
+   elsewhere
+      g = -999.
+   end where
+   print *,g
+   
 end program
