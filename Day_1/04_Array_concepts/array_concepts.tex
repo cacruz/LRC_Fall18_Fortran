@@ -190,7 +190,7 @@ B,C,D are conformable\\
 Literals and constants can be used in array declarations, 
   \FortranStyle
 \begin{lstlisting}[style=Fortran]
-    real, dimension(15)       :: A
+    real, dimension(15)       :: A ! static arrays
     real, dimension(-4:0,0:2) :: B
     
     integer, dimension(20)    :: N
@@ -313,7 +313,7 @@ the section starts at \emph{start} and ends at ot before \emph{end}.\emph{stride
 \footnotesize{
 Consider the declaration:
  \begin{lstlisting}[style=Fortran]
- REAL, DIMENSION(-10:10,23,14:28) :: A
+real, dimension(-10:10,23,14:28) :: A
  \end{lstlisting}
  Then:
 \begin{itemize}
@@ -375,7 +375,7 @@ Used to give arrays or sections of arrays specific values. For example,
 \footnotesize{
  RESHAPE is a general intrinsic function which delivers an array of a specific shape: 
   \begin{lstlisting}[style=Fortran]
-RESHAPE(SOURCE, SHAPE)
+RESHAPE(original_shape, new_shape)
    \end{lstlisting}
  e.g.:
    \begin{lstlisting}[style=Fortran]
@@ -417,18 +417,18 @@ Named array constants can be created
 \frametitle{Allocatable Arrays}
 
 \footnotesize{
-Fortran allows arrays to be created on-the-fly; these are known as \emph{deferred-shape} arrays and use dynamic heap storage. \\
-Deferred-shape arrays are
+Fortran allows arrays to be created on-the-fly; these are known as \emph{allocatable} arrays and use \emph{dynamic heap} storage. Allocatable arrays are
 \begin{itemize}
 \item declared like explicit-shape arrays but without the extents and with the ALLOCATABLE attribute.
 \begin{itemize}
-\item integer, dimension(:), ALLOCATABLE :: ages
-\item real, dimension(:,:), ALLOCATABLE :: speed
+\item integer, dimension(\textcolor{red}{:}), ALLOCATABLE :: ages
+\item real, dimension(\textcolor{red}{:},\textcolor{red}{:}), ALLOCATABLE :: speed
  \end{itemize}
  \item given a size in an ALLOCATE statement which assigns an area of memory to the object.
 \begin{itemize}
 \item ALLOCATE(ages(1:10), STAT=ierr)
 \item ALLOCATE(speed(-lwb:upb,-50:0),STAT=ierr)
+%The ALLOCATE statement associates storage with an allocatable array:
  \end{itemize}
 \item the optional STAT= field reports on the success of the storage request. If the INTEGER variable ierr is zero the request was successful otherwise it failed. 
  \end{itemize}
@@ -443,18 +443,41 @@ Deferred-shape arrays are
 \footnotesize{
 Heap storage can be reclaimed using the DEALLOCATE statement:
  \begin{lstlisting}[style=Fortran]
-IF (ALLOCATED(ages)) DEALLOCATE(ages,STAT=ierr)
+DEALLOCATE(ages,STAT=ierr)
  \end{lstlisting}
 
 \begin{itemize}
 \item it is an error to deallocate an array without the ALLOCATE attribute or one that has not been previously allocated space.
-\item there is an intrinsic function, ALLOCATED, which returns a scalar LOGICAL values reporting on the status of an array. 
+\item there is an intrinsic function, ALLOCATED, which returns a scalar LOGICAL values reporting on the status of an array. \\
+ \begin{lstlisting}[style=Fortran]
+if (ALLOCATED(ages)) DEALLOCATE(ages,STAT=ierr)
+ \end{lstlisting}
+
 \item the STAT= field is optional but its use is recommended
 \item if a procedure containing an allocatable array which does not have the SAVE attribute is exited without the array being DEALLOCATE d then this storage becomes inaccessible
  \end{itemize}
 }
 
 \end{frame}
+
+% --- Slide
+\begin{frame}[fragile]
+\frametitle{Beware of memory leaks}
+
+It is the program that takes responsibility for allocating and deallocating storage to \textbf{static} variables.\\
+However, when using dynamic arrays this responsibility falls to the \textbf{programmer}. 
+
+\begin{itemize}
+\item Storage allocated to local variables (in say a subroutine or function - more on this later) must be \textbf{deallocated} before the exiting the procedure. 
+\begin{itemize}
+\item When leaving a procedure all local variables are deleted from memory and the program releases any associated storage for use elsewhere, however any storage allocated through the ALLOCATE statement will remain "in use" even though it has no associated variable name!
+ \end{itemize}
+\item Storage allocated, but no longer accessible, cannot be released or used elsewhere in the program and is said to be in an "undefined" state This reduction in the total storage available to the program called is a "memory leak".
+ \end{itemize}
+
+
+\end{frame}
+
 
 
 % --- Slide
@@ -559,7 +582,7 @@ We will solve a computational problem that converts temperatures in Fahrenheit t
 \begin{equation}
 K = \frac{5}{9}(F - 32) + 273.15
 \end{equation}
-Using a text editor open the file arrays\_exercise.F90 and \emph{complete the empty code blocks}. You will:
+Using a text editor open the file exercise.F90 and \emph{complete the empty code blocks}. You will:
 \begin{itemize}
 \item Perform the conversion
 \item Print the F and K values

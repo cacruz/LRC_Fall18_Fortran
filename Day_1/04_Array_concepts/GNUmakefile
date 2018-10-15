@@ -1,9 +1,9 @@
-all: arrays_exercise.x arrays_examples.x
+all: exercise.x examples.x
 
-arrays_exercise.x: arrays_exercise.F90
+exercise.x: exercise.F90
 	gfortran -o $@ $^
 
-arrays_examples.x: arrays_examples.F90
+examples.x: examples.F90
 	gfortran -o $@ $^
 
 .PHONY: clean
