@@ -163,7 +163,8 @@ Bruce Van Aartsen}
 \frame[containsverbatim]{
   \frametitle{Rationale}
   \begin{itemize}
-    \item Actions/operations which have to be performed more than once
+  \item Actions/operations which have to be performed more than once
+   \item Test only parts of the code
     \item One big problem split into clearer and simpler sub-problems
   \end{itemize}
 
@@ -174,24 +175,29 @@ Bruce Van Aartsen}
   \begin{itemize}
     \item Special type of Fortran subprogram that is expected to
       return a single result or answer
-    \item Typically accept some kind of input information and based on that information, return a result.
+    \item Typically accept some kind of input information and based on
+      that information, return a result.
+    \item Invoked by inserting the function name.
+    \item It is called only when its result is needed.
   \end{itemize}
 
  }
 
  \frame[containsverbatim]{
-  \frametitle{Syntax for a User-Defined Function }
+   \frametitle{Syntax for a User-Defined Function }
+
+  {\small 
   \begin{semiverbatim}
   \begin{lstlisting}
- function <name> ( <arguments> ) result(returnedValue)
-   <declarations>
-   <type> :: returnedValue
-   <body of function>
-   returnedValue = expression
- end function <name>
+type FUNCTION funct-name(arg1,...,argn) [result (return-value-name)]
+   IMPLICIT NONE
+   [specification part]
+   [execution part]
+END FUNCTION funct-name
+The function returns a single value.
   \end{lstlisting}
 \end{semiverbatim}
-The $<type>$ is one of the Fortran data types: real, integer, logical, character, or complex.
+}
 }
 
  \frame[containsverbatim]{
@@ -238,7 +244,9 @@ atan
       information, return a result or series of results.
     \item Each of the passed arguments must be declared and the
       declaration must include the type and the intent.
-    \item The arguments in the calling routine and the subroutine must match and are matched up by position.
+    \item The arguments in the calling routine and the subroutine must
+      match and are matched up by position.
+     \item Invoked with the CALL statement.
   \end{itemize}
 
  }
@@ -247,13 +255,17 @@ atan
   \frametitle{Syntax for a Subroutine }
   \begin{semiverbatim}
   \begin{lstlisting}
- subroutine <name> ( <arguments> )
-    <declarations>
-    <body of subroutine>
-    return
- end subroutine <name>
+
+SUBROUTINE subroutine-name(arg1, arg2,...,argn)
+   IMPLICIT NONE
+   [specification part]
+   [execution part]
+END SUBROUTINE subroutine-name
   \end{lstlisting}
 \end{semiverbatim}
+
+If the subroutine does not require any arguments, the
+(arg1, arg2,...,argn) can be omitted.
 }
 
 \frame[containsverbatim]{
