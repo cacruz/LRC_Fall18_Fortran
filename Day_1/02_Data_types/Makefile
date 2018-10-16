@@ -1,3 +1,4 @@
+
 DEBUG_FLAG    =
 CC_OPTIMIZE   = -O2
 OPTIMIZE_FLAG = -O2
@@ -7,6 +8,8 @@ MAKE       = make
 
 MV         = mv
 
+#FC = /opt/local/bin/gfortran-mp-7
+
 FC         = gfortran
 FFLAGS     = -c  $(DEBUG_FLAG) $(OPTIMIZE_FLAG)
 
@@ -15,13 +18,24 @@ LDFLAGS    = $(LDR_OPTS)
 
 FSOURCE    = *.F90
 
-all: exampleSubroutine.ex exampleFunction.ex
+all: testingComplex.ex testingInteger.ex testingReal.ex \
+     testingCharacter.ex testingLogical.ex
 
-exampleSubroutine.ex: exampleSubroutine.o
-	$(FC) -o exampleSubroutine.ex exampleSubroutine.o
+testingCharacter.ex: testingCharacter.o
+	$(FC) -o testingCharacter.ex testingCharacter.o
 
-exampleFunction.ex: exampleFunction.o
-	$(FC) -o exampleFunction.ex exampleFunction.o
+testingReal.ex: testingReal.o
+	$(FC) -o testingReal.ex testingReal.o
+
+testingLogical.ex: testingLogical.o
+	$(FC) -o testingLogical.ex testingLogical.o
+
+testingInteger.ex: testingInteger.o
+	$(FC) -o testingInteger.ex testingInteger.o
+
+testingComplex.ex: testingComplex.o
+	$(FC) -o testingComplex.ex testingComplex.o
+
 
 clean:
 	rm -f *.o *.mod *.ex
@@ -38,4 +52,3 @@ clean:
 
 .F90.o: $(FSOURCE)
 	$(FC) $(FFLAGS) $(DEPEND_INC) $(LINC) $?
-
