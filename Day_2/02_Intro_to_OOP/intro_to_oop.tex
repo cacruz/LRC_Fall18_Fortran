@@ -468,36 +468,6 @@ A simple example.
 
 % --- Slide ---
 
-\begin{frame}{Data Abstraction}
-
-\begin{columns}
-
- \begin{column}{0.38\textwidth}
-        
-\begin{center} 
-  \includegraphics[width=0.7\textwidth]{../../shared/abstraction.png} 
-\end{center} 
-
- \end{column}
-  
-  \begin{column}{0.7\textwidth}
-%\scriptsize{
-    \begin{itemize}
-        \item Abstraction refers to the act of representing essential features without including the background details or explanations.
-        \item Classes use concept of abstraction and are abstract data types
-	\item E.g. polygon is an abstraction of shape. Shape is a generalization of polygon.
-	\item Fortran 2003 supports data abstraction (keyword: \textbf{abstract})
-    \end{itemize}
-%	}
-
-  \end{column}
-\end{columns}
-
-\end{frame}
-
-
-% --- Slide ---
-
 \begin{frame}[fragile]{Encapsulation (1)}
 % controls visibility of names
 \textbf{Encapsulation} is the ability to isolate and hide implementation details within a software subsystem.\footnote{Note: Fortran 90 introduced strong encapsulation capabilities with public/private access for module entities.}
@@ -535,32 +505,37 @@ end my_mod
 
 \end{frame}
 
-%% --- Slide ---
-%
-%\begin{frame}[fragile]{Function/procedure pointers}
-%
-%\footnotesize{
-% \FortranStyle
-%\begin{lstlisting}[style=Fortran]
-%type :: my_type
-%   real :: value
-%contains
-%   procedure :: some_proc 
-%end type my_type
-%\end{lstlisting}
-%
-%While not strictly an OO concept, function pointers (e.g. \emph{procedure :: some\_proc}) are a major part of the implementation of OO abstractions. \textbf{More on this later}.
-%\begin{itemize}
-%
-%  \item A function pointer is a \emph{data type} that is able to be associated with actual functions/procedures. The association is determined at \emph{run-time}.
-%
-%  \item Data structure with function pointer can be used to invoke different behavior in different contexts by associating with different actual functions.
-%  \item Introduced in Fortran 2003
-%  
-% \end{itemize}
-%}
-%\end{frame}
-%
+
+% --- Slide ---
+
+\begin{frame}{Data Abstraction}
+Abstraction can be thought of as a natural extension of encapsulation.
+% In object-oriented design, programs are often extremely large. And separate objects communicate with each other a lot. So maintaining a large codebase like this for years???with changes along the way???is difficult.
+% Abstraction is a concept aiming to ease this problem.
+\begin{columns}
+
+ \begin{column}{0.38\textwidth}
+        
+\begin{center} 
+  \includegraphics[width=0.7\textwidth]{../../shared/abstraction.png} 
+\end{center} 
+
+ \end{column}
+  
+  \begin{column}{0.7\textwidth}
+%\scriptsize{
+    \begin{itemize}
+        \item Abstraction refers to the act of representing essential features without including the background details or explanations.
+        \item Classes use concept of abstraction and are abstract data types
+	\item E.g. polygon is an abstraction of shape. Shape is a generalization of polygon.
+	\item Fortran 2003 supports data abstraction (keyword: \textbf{abstract})
+    \end{itemize}
+%	}
+
+  \end{column}
+\end{columns}
+Implementation changes, e.g. a software update, rarely affect the abstraction you use.
+\end{frame}
 
 % --- Slide ---
 
@@ -597,6 +572,7 @@ end my_mod
 \begin{frame}{Polymorphism}
 
 % accommodates various implementations
+
 \textbf{Polymorphism} is the capability of treating objects of a subclass as though they were members of the parent class.
 \begin{itemize}
 
@@ -612,7 +588,6 @@ end my_mod
  \end{itemize}
 
 \end{frame}
-
 
 
 % --- Slide ---
