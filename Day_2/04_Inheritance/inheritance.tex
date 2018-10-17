@@ -153,11 +153,11 @@ keepspaces,
 Or "Procedures Bound to a Type by Name"
 \begin{itemize}
   \item Allows a Fortran subroutine or procedure to be treated as a method on an object of the given type.\\
-  \quad call object\%method(...)\\
-  \quad x = object\%func(...)\\
+  \quad \textcolor{blue}{call object\%method(...)} \\
+  \quad \textcolor{blue}{x = object\%func(...)} \\
   which is equivalent to\\
-  \quad call method(object, ...)\\
-  \quad x = func(object, ...)\\
+  \quad \textcolor{blue}{call method(object, ...)} \\
+  \quad \textcolor{blue}{x = func(object, ...)} \\
   \item This syntax encourages an object-oriented style of programming that can improve clarity in some contexts.
   \item Procedures can also be bound by type to operators: [=, +, etc. ]
 \end{itemize}
@@ -172,13 +172,13 @@ Or "Procedures Bound to a Type by Name"
 The following example defines a derived type with 2 type bound procedures compute() and retrieve()
 \FortranStyle
 
- \begin{lstlisting}[style=Fortran]
-type myType
+\begin{lstlisting}[style=Fortran]
+type my_type
    real :: value
 contains
    procedure :: compute
-    procedure :: retrieve
-end type myType
+   procedure :: retrieve
+end type my_type
 \end{lstlisting}
 \begin{itemize}
 \item Type-bound procedures must be module procedures or external procedures with explicit interfaces.\\
@@ -204,21 +204,21 @@ end type myType
 \begin{lstlisting}[style=Fortran]
 module myType_mod
    private  ! information hiding
-   public :: myType ! except
-   type myType
-        real :: myValue(4) = 0.0
+   public :: my_type ! except
+   type my_type
+        real :: my_value(4) = 0.0
    contains
         procedure :: write
         procedure :: reset
-   end type myType 
+   end type my_type 
 contains
    subroutine write (this, unit)
-   class(mytype) :: this
+   class(my_type) :: this
       integer, optional :: unit
       if(present(unit)) then
-         write (unit, *) this % myValue
+         write (unit, *) this % my_value
       else
-         print *, this%myvalue
+         print *, this%my_value
        endif
    end subroutine write
 ...
@@ -232,8 +232,8 @@ contains
 \begin{lstlisting}[style=Fortran]
 ...
 subroutine reset(variable)
-     class(mytype) :: variable
-variable%myvalue = 0.0 end subroutine reset
+     class(my_type) :: variable
+variable%my_value = 0.0 end subroutine reset
 end module myType_mod
 \end{lstlisting}
 
