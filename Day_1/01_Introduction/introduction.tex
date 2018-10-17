@@ -100,7 +100,7 @@ keepspaces,
   {\signed{\usebox\mybox}\end{quote}}
   
 % items enclosed in square brackets are optional; explanation below
-\title{Introduction and Setup}
+\title{Introduction}
 %\subtitle{Introduction}
 \author{Carlos Cruz}
 \institute{
@@ -366,6 +366,11 @@ Unique benefits:
  \item It is a language that has been designed exclusively for numerical computation and has applications only in computational science and engineering.
  \end{itemize}
  \end{itemize}
+% Other reasons:
+% generic names for procedures, op args
+% recursive proc, op overloading
+% struct data or deriv types
+% oop
 
 \end{frame}
 
@@ -373,12 +378,11 @@ Unique benefits:
 \begin{frame}[fragile]
 \frametitle{}
 
-
-\centering{
+\begin{center}
 \huge{
 General Structure of Fortran Programs
 }
-}
+\end{center}
 
 \end{frame}
 
@@ -389,11 +393,9 @@ General Structure of Fortran Programs
 \begin{itemize}
 \item Fortran source code is in ASCII text that can be written in any plain-text editor
 \begin{itemize}
-	\item Use a good editor, e.g. vim or emacs 
+	\item Use a good editor, e.g. vim or emacs - both are capable of syntax highlighting.
 \end{itemize}
-% so, use a good editor capable of syntax highlighting
 \item Fortran source code is \textbf{case insensitive}, i.e. \emph{X} is the same \emph{x}
-\item Avoid using  mixed case for statements and variables. It is not considered a \textbf{best practice}
 \item Use uppercase letters for Fortran keywords ... or not
 \begin{itemize}
 	\item Use one convention and be consistent. 
@@ -407,12 +409,16 @@ General Structure of Fortran Programs
 \begin{frame}[fragile]
 \frametitle{Basic Program Structure}
 
-The general structure of a Fortran \textbf{program} is as follows:
+ \footnotesize{The general structure of a Fortran \textbf{program} is as follows:}
+\begin{columns}
+ \begin{column}{0.48\textwidth}
+ \footnotesize{
 \FortranStyle
-
  \begin{lstlisting}[style=Fortran]
-PROGRAM program_name ! keyword PROGRAM
-IMPLICIT NONE   !  i.e. all variable MUST be declared
+! keyword PROGRAM
+PROGRAM program_name 
+!  All variable MUST be declared
+IMPLICIT NONE
 ! Variable declarations
  ...   type declarations 
 ! Main program
@@ -421,9 +427,19 @@ IMPLICIT NONE   !  i.e. all variable MUST be declared
  ...    optional subprogram units
 END PROGRAM
 \end{lstlisting}
-The unit containing the PROGRAM attribute is often called the \textbf{main program} or \textbf{main}.
-\end{frame}
+}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+\begin{figure}[t]
+\centering
+\includegraphics[scale=.3]{../../shared/main}
+\end{figure}
 
+  \end{column}
+\end{columns}
+
+ \footnotesize{The unit containing the PROGRAM attribute is often called the \textbf{main program} or \textbf{main}.}
+\end{frame}
 
 % --- Slide
 
@@ -464,11 +480,12 @@ source files are named $<$name$>$.f90. But:
 \frametitle{}
 
 
-\centering{
+\begin{center}
 \huge{
 Compiling, Linking and Running Fortran Programs
 }
-}
+\end{center}
+
 
 \end{frame}
 
