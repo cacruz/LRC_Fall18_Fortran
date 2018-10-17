@@ -131,7 +131,7 @@ keepspaces,
 \textcolor{red}{Miscellaneous Items}
     \begin{itemize}
     \item Computing Environment
-    \item Array Constructor Syntax
+    \item New constructs
     \item Module Enhancements
     \begin{itemize}
     \item IMPORT
@@ -148,9 +148,10 @@ keepspaces,
 
 % --- Slide ---
 
-\begin{frame}{Computing Environment}
+\begin{frame}{Accessing the Computing Environment}
+
+\footnotesize{
 \begin{itemize}
-  \item From the intrinsic module ISO\_FORTRAN\_ENV
   \item For the following assume we have launched the executable with the command line: \\
   \quad \$ foo.x apple 5 z
   \item COMMAND\_ARGUMENT\_COUNT()
@@ -161,7 +162,7 @@ keepspaces,
  
  \item GET\_COMMAND([COMMAND,LENGTH,STATUS])
   \begin{itemize}
-  \item All INTENT(OUT)andOPTIONAL
+  \item All INTENT(OUT) and OPTIONAL
   \item LENGTH - integer \# of characters in command
   \item STATUS - integer (success/failure)
   \item Results for example command:
@@ -170,8 +171,8 @@ keepspaces,
   \item LENGTH=15
   \end{itemize}
  \end{itemize}
-
 \end{itemize}
+}
 
 \end{frame}
 
@@ -179,8 +180,10 @@ keepspaces,
 % --- Slide ---
 
 \begin{frame}{Computing Environment}
+
+\footnotesize{
 \begin{itemize}
- \item GET\_COMMAND\_ARGUMENT(NUMBER[,VALUE,LENGT H,STATUS])
+ \item GET\_COMMAND\_ARGUMENT(NUMBER[,VALUE,LENGTH,STATUS])
   \begin{itemize}
   \item NUMBER - selects argument
   \item VALUE - character, intent(out) value of argument
@@ -194,33 +197,37 @@ keepspaces,
   \quad VALUE="5", LENGTH=1
   \end{itemize}
  \end{itemize}
-
 \end{itemize}
+}
 
 \end{frame}
 
 % --- Slide ---
 
 \begin{frame}[fragile]
-\frametitle{Environment examples}
+\frametitle{ISO\_FORTRAN\_ENV}
 
-\scriptsize{
-Getting command arguments:
-\FortranStyle
-\begin{lstlisting}[style=Fortran]
-use ISO_FORTRAN_ENV 
-character(len=MAXLEN_ARG) :: arg1, arg2 
-call get_command_argument(1, VALUE=arg1) 
-call get_command_argument(2, VALUE=arg2) 
-read(arg1,'(i)') nx
-read(arg2,'(i)') ny
-\end{lstlisting}
-Getting an environment variable::
-\begin{lstlisting}[style=Fortran]
-use ISO_FORTRAN_ENV 
-character(len=100) :: myShell
-call get_environment_variable('SHELL', myShell)
-\end{lstlisting}
+\footnotesize{
+A new intrinsic module is ISO\_FORTRAN\_ENV. It contains the following constants
+\begin{itemize}
+
+ \item INPUT\_UNIT, OUTPUT\_UNIT, and ERROR\_UNIT 
+  \begin{itemize}
+  \item are default integer scalars holding the unit identified by an asterisk in a READ statement, an asterisk in a WRITE statement, and used for the purpose of error reporting, respectively.
+  \end{itemize}
+  
+  \item IOSTAT\_END and IOSTAT\_EOR 
+  \begin{itemize}
+  \item are default integer scalars holding the values that are assigned to the IOSTAT= variable if an end-of-file or end-of-record condition occurs, respectively.
+  \end{itemize}
+  
+  \item NUMERIC\_STORAGE\_SIZE, CHARACTER\_STORAGE\_SIZE, and FILE\_STORAGE\_SIZE 
+  \begin{itemize}
+   \item are default integer scalars holding the sizes in bits of a numeric, character, and file storage unit, respectively.
+   \end{itemize}
+   
+\end{itemize}
+
 }
 
 \end{frame}
@@ -249,6 +256,90 @@ call get_environment_variable('SHELL', myShell)
 
 \end{itemize}
 
+\end{frame}
+
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{ASSOCIATE construct}
+ASSOCIATE construct associates named entities with expressions or variables during the execution of its block.
+\footnotesize{
+\FortranStyle
+\begin{lstlisting}[style=Fortran]
+use constants, only: gas_constant
+ASSOCIATE ( R=>gas_constant, T => temp, P=>press, V=>vol)
+    P = n*R*T/V
+END ASSOCIATE
+
+ASSOCIATE ( Z => EXP(-(X**2+Y**2)) * COS(THETA) ) 
+    Y = A*ZEND ASSOCIATE
+\end{lstlisting}
+}
+\end{frame}
+
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{ALLOCATE statement}
+
+\footnotesize{
+The allocatable attribute is no longer restricted to arrays 
+\FortranStyle
+\begin{lstlisting}[style=Fortran]
+type (matrix(m=10,n=20)) :: a
+type (matrix(m=:,n=:)), allocatable :: b, c
+ALLOCATE(b, source=a)
+ALLOCATE(c, source=a)
+\end{lstlisting}
+allocates the scalar objects b and c to be 10 by 20 matrices with the value of a. 
+}
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{Transferring an allocation}
+
+
+\footnotesize{
+The intrinsic subroutine MOVE\_ALLOC(FROM,TO) has been introduced to move an allocation from one allocatable object to another. 
+\FortranStyle
+\begin{lstlisting}[style=Fortran]
+REAL,ALLOCATABLE :: GRID(:),TEMPGRID(:)
+...ALLOCATE(GRID(-N:N) ! initial allocation of GRID 
+...ALLOCATE(TEMPGRID(-2*N:2*N)) ! allocate bigger grid 
+TEMPGRID(::2) = GRID ! distribute values to new locations 
+CALL MOVE_ALLOC(TO=GRID,FROM=TEMPGRID)
+\end{lstlisting}
+MOVE\_ALLOC provides a reallocation facility that avoids the problem that has beset all previous attempts: deciding how to spread the old data into the new object.
+}
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}[fragile]
+\frametitle{SELECT TYPE construct}
+\footnotesize{
+The SELECT TYPE construct selects for execution at most one of its constituent blocks, depending on the dynamic type of a variable or an expression, known as the 'selector'. 
+\FortranStyle
+\begin{lstlisting}[style=Fortran]
+CLASS matrix :: mat
+...
+SELECT TYPE (A => mat)
+    TYPE IS (matrix)
+       <code here>
+    TYPE IS (sparse_matrix)
+       <code here>
+END SELECT
+\end{lstlisting}
+\begin{itemize}
+\item The first block is executed if the dynamic type of \emph{mat} is \emph{matrix} and the second block is executed if it is \emph{sparse\_matrix}.  
+\item The association of the selector \emph{mat} with its associate name \emph{A} is exactly as in an ASSOCIATE construct
+\item In the second block, we may use \emph{A}  to access the extensions thus: \emph{A}\%sparse
+\end{itemize}
+}
 \end{frame}
 
 
@@ -289,7 +380,7 @@ IMPORT is a new statement to address this issue.
   \item Specifies all entities in host scoping unit that are accessible
   \item \emph{Only} allowed in an interface body within a module
   \end{itemize}
- Exmaple:
+ Example:
 \FortranStyle
 \begin{lstlisting}[style=Fortran]
 ...
@@ -328,26 +419,6 @@ protected :: pi ! Allow value to be read
 }
 
 \end{frame}
-
-% --- Slide ---
-
-\begin{frame}[fragile]
-\frametitle{VOLATILE attribute}
-
-\begin{itemize}
- \item Introduced for a data object to indicate that its value might be modified by means external to the program.
-  \begin{itemize}
-  \item Non standard extensions (e.g. threads)
-  \item Card connected to external lab instrument
-  \end{itemize}
-  
-  \item Effect is that the compiler is required to not rely on values in cache or other temporary memory.
-  \item If an object has the VOLATILE attribute, so do all of its subobjects.
-  \item For pointers, attribute refers only to the association status, \emph{not} the target.
-\end{itemize}
-
-\end{frame}
-
 
 % --- Slide ---
 
