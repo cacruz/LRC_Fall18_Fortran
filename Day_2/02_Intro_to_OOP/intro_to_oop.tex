@@ -417,6 +417,19 @@ OOP is a paradigm in which a program's state and behavior are bundled into \text
 
 \end{frame} 
 
+% --- Slide
+
+\begin{frame}{Caveats} 
+
+    \begin{itemize}
+	\item OOP is a major paradigm shift which generally takes years to fully absorb.
+        \item We hope to \emph{motivate} the rationale for using OO Fortran in some circumstances.
+    \end{itemize}
+
+How do we write Fortran programs using the OO paradigm?
+What OOP support does Fortran provide?
+
+\end{frame} 
 
 
 % --- Slide ---
@@ -426,7 +439,7 @@ OOP is a paradigm in which a program's state and behavior are bundled into \text
 
 \centering{
 \huge{
-How does Fortran 2003+ support OOP?
+A simple example.
 }
 }
 
@@ -453,20 +466,52 @@ How does Fortran 2003+ support OOP?
 \end{frame} 
 
 
-% --- Slide
+% --- Slide ---
 
-\begin{frame}{Design} 
-UML diagram
-\begin{center} 
-  \includegraphics[width=0.9\textwidth]{../../shared/shapes_uml.png} 
-\end{center} 
+\begin{frame}[fragile]{Encapsulation (1)}
+% controls visibility of names
+\textbf{Encapsulation} is the ability to isolate and hide implementation details within a software subsystem.\footnote{Note: Fortran 90 introduced strong encapsulation capabilities with public/private access for module entities.}
+\bi
+\item Encapsulation allows the creation of an object
+\item It is the mechanism can shield from outside interference or misuse. 
+\bi
+\item Within an object, \emph{some} of the code and/or data may be private to the object and inaccessible to anything outside the object. In Fortran we use the keyword \textbf{abstract}.
+\ei
+\ei
 
-\end{frame} 
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}[fragile]{Encapsulation (2)}
+
+The Fortran concepts for encapsulation are \emph{derived types} and \emph{type bound procedures}\footnote{Introduced in Fortran 2003}
+\footnotesize{
+\FortranStyle
+\begin{lstlisting}[style=Fortran]
+module my_mod
+   implicit none
+   private ! hide everything by default
+   public my_type ! expose my_type
+   type my_type ! a derived type
+      private ! hide data details
+      real :: value
+   contains
+      procedure :: compute ! a public type-bound procedure
+   end type my_type
+end my_mod
+\end{lstlisting}
+}
+
+\end{frame}
+
 
 % --- Slide ---
 
 \begin{frame}{Data Abstraction}
-
+Abstraction can be thought of as a natural extension of encapsulation.
+% In object-oriented design, programs are often extremely large. And separate objects communicate with each other a lot. So maintaining a large codebase like this for years???with changes along the way???is difficult.
+% Abstraction is a concept aiming to ease this problem.
 \begin{columns}
 
  \begin{column}{0.38\textwidth}
@@ -489,23 +534,7 @@ UML diagram
 
   \end{column}
 \end{columns}
-
-\end{frame}
-
-
-% --- Slide ---
-
-\begin{frame}[fragile]{Encapsulation}
-% controls visibility of names
-\textbf{Encapsulation} is the ability to isolate and hide implementation details within a software subsystem.\footnote{Note: Fortran 90 introduced strong encapsulation capabilities with public/private access for module entities.}
-\bi
-\item Encapsulation allows the creation of an object
-\item It is the mechanism can shield from outside interference or misuse. 
-\bi
-\item Within an object, \emph{some} of the code and/or data may be private to the object and inaccessible to anything outside the object. In Fortran we use the keyword \textbf{abstract}.
-\ei
-\ei
-
+Implementation changes, e.g. a software update, rarely affect the abstraction you use.
 \end{frame}
 
 % --- Slide ---
@@ -540,35 +569,10 @@ UML diagram
 
 % --- Slide ---
 
-\begin{frame}[fragile]{Function/procedure pointers}
-  \FortranStyle
-    \FontBcolumn
-\begin{lstlisting}[style=Fortran]
-    type :: some_type
-        real :: some_var
-    contains
-        procedure :: some_proc 
-    end type some_type
-\end{lstlisting}
-
-While not strictly an OO concept, function pointers (e.g. \emph{procedure :: some\_proc}) are a major part of the implementation of OO abstractions. \textbf{More on this later}.
-\begin{itemize}
-
-  \item A function pointer is a \emph{data type} that is able to be associated with actual functions/procedures. The association is determined at \emph{run-time}.
-
-  \item Data structure with function pointer can be used to invoke different behavior in different contexts by associating with different actual functions.
-  \item Introduced in Fortran 2003
-  
- \end{itemize}
-
-\end{frame}
-
-
-
-% --- Slide ---
-
 \begin{frame}{Polymorphism}
+
 % accommodates various implementations
+
 \textbf{Polymorphism} is the capability of treating objects of a subclass as though they were members of the parent class.
 \begin{itemize}
 
@@ -579,12 +583,11 @@ While not strictly an OO concept, function pointers (e.g. \emph{procedure :: som
     \end{itemize}
 
   \item Polymorphism and inheritance are distinct aspects but are typically applied together for maximum impact.
-  \item E.g. polymorphic variable \emph{myShape} of \emph{class Shape} will compute the compute area/perimeter according to type set at run time.
+  \item E.g. polymorphic variable \emph{my\_shape} of \emph{class shape} will compute the compute area/perimeter according to type set at run time.
   
  \end{itemize}
 
 \end{frame}
-
 
 
 % --- Slide ---
@@ -599,7 +602,7 @@ AKA \textbf{Parametric Polymorphism}.
     \item Routines using the type then specify which case to use.
     \end{itemize}
 
-  \item Fortran 2003 introduces a limited form.
+  \item Fortran 2003 introduces a limited form\footnote{Parameterized derived types}.
     \begin{itemize}
     \item Derived types can be parameterized for \emph{kinds} and sizes.
     \item Cannot parameterize integers and reals simultaneously.
@@ -609,6 +612,15 @@ AKA \textbf{Parametric Polymorphism}.
 
 \end{frame}
 
+% --- Slide
+
+\begin{frame}{Design} 
+UML diagram
+\begin{center} 
+  \includegraphics[width=0.9\textwidth]{../../shared/shapes_uml.png} 
+\end{center} 
+
+\end{frame} 
 
 % --- Slide ---
 \begin{frame}[fragile]
@@ -617,7 +629,7 @@ AKA \textbf{Parametric Polymorphism}.
 
 \centering{
 \huge{
-Examples
+Complex examples.
 }
 }
 
@@ -648,32 +660,23 @@ The clearest case for OOP in scientific models is in the "infrastructure" which 
 
 % --- Slide ---
 
-\begin{frame}{Other examples}
+\begin{frame}{Other examples with significant use of Fortran 2003}
 
 \begin{itemize}
 
-  \item Climate model tracer infrastructure
+  \item NASA GISS modelE tracer infrastructure 
   \begin{itemize}
-  \item Needs to support multiple tracer/chemistry
-  \item Needs to support multiple integration schemes   
+  \item Supports \textbf{multiple} tracer/chemistry groups
+  \item Needs to support multiple integration schemes
+  \end{itemize}
+
+  \item The parallel Fortran logging framework for HPC applications 
+  \begin{itemize}
+  \item Supports multiple \textbf{logging} levels and multiple \textbf{output} streams
   \end{itemize}
   
-  \item Multiple Computational Grids
-
-  \begin{itemize}
-  \item E.g. for coupled Earth systems we might have
-  \begin{itemize}
-  \item Lat-Lon (Arakawa A, B, C, D)
-  \item Cubed-Sphere
-  \item Icosahedral
-   \end{itemize}
-   \item Some subsystems can "work" with any grid, while others are dependent on specific representations.
-   \item Coupling can require custom interpolations between grids.
-   \item Can we provide a software layer that supports various grid-specific operations while hiding the details from the layers that don't really care which grid is being used?
-   % Domain-decomposition, halo-fill
-   % I/O operations
-   \end{itemize}
-
+  \item pFUnit: A parallel Fortran unit testing framework for HPC applications
+  
  \end{itemize}
 
 \end{frame}
