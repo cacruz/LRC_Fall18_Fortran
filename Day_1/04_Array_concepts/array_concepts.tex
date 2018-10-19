@@ -149,10 +149,21 @@ keepspaces,
   \FortranStyle
     \FontBcolumn
 \begin{lstlisting}[style=Fortran]
-    REAL, DIMENSION(15)       :: A
-    REAL, DIMENSION(-4:0,0:2) :: B
-    REAL :: C(5,3), D(0:4,0:2) 
+real, dimension(15)       :: A
+real, dimension(-4:0,0:2) :: B
+real C(5,3), D(0:4,0:2) 
 \end{lstlisting}
+A:\\
+\quad rank=1, size=15, shape=15\\
+B:\\
+\quad rank=2, size=15, shape=5x3\\
+C:\\
+\quad rank=2, size=15, shape=5x3\\
+D:\\
+\quad rank=2, size=15, shape=5x3\\
+\vspace{5mm}
+B,C,D are conformable\\
+
 \end{column}
 
   \begin{column}{0.4\textwidth}
@@ -173,6 +184,32 @@ keepspaces,
 
 % --- Slide
 
+\begin{frame}[fragile]
+\frametitle{Array Declarations}
+
+Literals and constants can be used in array declarations, 
+  \FortranStyle
+\begin{lstlisting}[style=Fortran]
+    real, dimension(15)       :: A ! static arrays
+    real, dimension(-4:0,0:2) :: B
+    
+    integer, dimension(20)    :: N
+    
+    integer, parameter :: UB = 5
+    real, dimension(0:UB-1)   :: Y
+    real, dimension(1+UB*UB,10) :: Z
+\end{lstlisting}
+
+\begin{itemize}
+\item Default lower bound is 1
+\item Bounds can begin and end anywhere
+\item Arrays can be zero-sized
+\end{itemize}
+ 
+\end{frame}
+
+% --- Slide
+
 \begin{frame}{Array visualization}
 
 
@@ -181,34 +218,10 @@ keepspaces,
 \includegraphics[scale=.4]{../../shared/array_vis2.png}
 \end{figure}
   
+% Data layout is critical for correctly passing arrays between programs written in different programming languages. It is also important for performance when traversing an array because modern CPUs process sequential data more efficiently than nonsequential data. This is primarily due to CPU caching. In addition, contiguous access makes it possible to use SIMD instructions that operate on vectors of data. In some media such as tape or NAND flash memory, accessing sequentially is orders of magnitude faster than nonsequential access
 
 \end{frame}
 
-
-% --- Slide
-
-\begin{frame}[fragile]
-\frametitle{Array Declarations}
-
-Literals and constants can be used in array declarations, 
-  \FortranStyle
-\begin{lstlisting}[style=Fortran]
-    REAL, DIMENSION(100)       :: A
-    REAL, DIMENSION(10,10)     :: B
-    REAL, DIMENSION(-10:-1)    :: X
-    INTEGER, PARAMETER :: lda = 5
-    REAL, DIMENSION(0:lda-1)   :: Y
-    REAL, DIMENSION(1+lda*lda,10) :: Z
-\end{lstlisting}
-
-\begin{itemize}
-\item default lower bound is 1,
-\item bounds can begin and end anywhere,
-\item arrays can be zero-sized
- \end{itemize}
-\bigskip
- 
-\end{frame}
 
 % --- Slide
 
@@ -218,25 +231,29 @@ Literals and constants can be used in array declarations,
 Using the earlier declarations, references can be made to:
 
 \begin{itemize}
-\item whole arrays (conformable)
-\begin{itemize}
-\item A = 0 sets whole array A to zero
-\item B = C + 1 adds one to all elements, of C and then assigns each element to the corresponding element of B
- \end{itemize}
+\item whole arrays (conformable)\\
+%\begin{itemize}
+\quad \textcolor{blue}{A = 0} $\leftarrow$ sets whole array A to zero \\
+\quad \textcolor{blue}{B = C + 1} $\leftarrow$ adds one to all elements, of C \\
+\quad \quad \quad and then assigns each element to the corresponding \\
+\quad \quad \quad element of B \\
+%\end{itemize}
 
-\item elements
-\begin{itemize}
-\item A(1) = 0.0 sets one element to zero
-\item B = A(3) + C(5,1) sets whole array B to the sum of two elements
- \end{itemize}
+\item elements \\
+%\begin{itemize}
+\quad \textcolor{blue}{A(1) = 0.0} $\leftarrow$ sets one element to zero \\
+\quad \textcolor{blue}{B = A(3) + C(5,1)} $\leftarrow$ sets whole array B to the sum of \\
+\quad \quad \quad two elements\\
+%\end{itemize}
 
-\item array sections
-\begin{itemize}
-\item A(2:6) = 0 sets section of A to zero
-\item B(-1:0,1:2) = C(1:2,2:3) + 1 adds one to the subsection of C and assigns to the subsection of B
+\item array sections \\
+%\begin{itemize}
+\quad \textcolor{blue}{A(2:6) = 0} $\leftarrow$ sets section of A to zero \\
+\quad \textcolor{blue}{B(-1:0,1:2) = C(1:2,2:3) + 1} $\leftarrow$  adds one to the subsection \\
+\quad \quad \quad of C and assigns it to the subsection of B \\
+% \end{itemize}
  \end{itemize}
- \end{itemize}
-\bigskip
+%\bigskip
  
 \end{frame}
 
@@ -249,12 +266,12 @@ Arrays can be treated like a single variable in that:
 \begin{itemize}
 \item can use intrinsic operators between conformable arrays (or sections)
 \begin{itemize}
-\item B = C * D - B**2
+\item \textcolor{blue}{B = C * D - B**2}
  \end{itemize}
 
 \item elemental intrinsic functions can be used
 \begin{itemize}
-\item B = sin(C) + cos(D)
+\item \textcolor{blue}{B = sin(C) + cos(D)}
  \end{itemize}
 
  \end{itemize}
@@ -275,15 +292,15 @@ An array can be subscripted by a \emph{subscript-triplet} giving rise to a sub-a
 the section starts at \emph{start} and ends at ot before \emph{end}.\emph{stride}  is the increment by which the locations are selected. \\
 \emph{start, end, stride} must all be scalar integer expressions. Thus, these are all valid:
   \FortranStyle
- \begin{lstlisting}[style=Fortran]
-   A(m:m) = 0     ! m to m, 1 element array
-   A(m:n:k) = 0   ! m to n step k
-   A(8:3:-1) = 0  ! 8 to 3 backwards
-   A(8:3) = 2     ! step 1 => zero size
-   A(M::4) = 1    ! default UPB, step 4
-   A(::2) = 1.0   ! default LWB and UPB
-   A(m**2:n*k/3) = 1.0
-   \end{lstlisting}
+\begin{lstlisting}[style=Fortran]
+	A(m:m) = 0     ! m to m, 1 element array
+	A(m:n:k) = 0   ! m to n step k
+	A(8:3:-1) = 0  ! 8 to 3 backwards
+	A(8:3) = 2     ! step 1 => zero size
+	A(M::4) = 1    ! default UPB, step 4
+	A(::2) = 1.0   ! default LWB and UPB
+	A(m**2:n*k/3) = 1.0
+\end{lstlisting}
 }
 \end{frame}
 
@@ -291,13 +308,14 @@ the section starts at \emph{start} and ends at ot before \emph{end}.\emph{stride
 % --- Slide
 
 \begin{frame}[fragile]
-\frametitle{Array Inquiry}
+\frametitle{Array Inquiry (1)}
 
 \footnotesize{
 Consider the declaration:
- \begin{lstlisting}[style=Fortran]
- REAL, DIMENSION(-10:10,23,14:28) :: A
- \end{lstlisting}
+  \FortranStyle
+\begin{lstlisting}[style=Fortran]
+real, dimension(-10:10,23,14:28) :: A
+\end{lstlisting}
  Then:
 \begin{itemize}
 \item LBOUND(SOURCE[,DIM]) -- lower bounds of an array (or bound in an optionally specified dimension).
@@ -306,6 +324,21 @@ Consider the declaration:
 \item LBOUND(A,1) is -10 (scalar)
  \end{itemize}
  \item UBOUND(SOURCE[,DIM]) -- upper bounds of an array (or bound in an optionally specified dimension).
+ \end{itemize}
+}
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Array Inquiry (2)}
+\footnotesize{
+ \FortranStyle
+\begin{lstlisting}[style=Fortran]
+real, dimension(-10:10,23,14:28) :: A
+\end{lstlisting}
+\begin{itemize}
 \item SHAPE(SOURCE) -- shape of an array.
 \begin{itemize}
 \item SHAPE(A) is (/21,23,15/) (array).
@@ -317,7 +350,6 @@ Consider the declaration:
 \item SIZE(A,1) is 21.
 \item SIZE(A) is 7245
  \end{itemize}
-\item ALLOCATED(SOURCE) -- array allocation status
  \end{itemize}
 }
 
@@ -331,16 +363,16 @@ Consider the declaration:
 Used to give arrays or sections of arrays specific values. For example,
   \FortranStyle
  \begin{lstlisting}[style=Fortran]
-    IMPLICIT NONE
-    INTEGER                        :: i
-    INTEGER, DIMENSION(10)         :: ints
-    CHARACTER(len=5), DIMENSION(3) :: colours
-    REAL, DIMENSION(4)             :: heights
+    implicit none
+    integer                        :: i
+    integer, dimension(10)         :: ints
+    character(len=5), dimension(3) :: colors
+    real, dimension(4)             :: heights
     heights = (/5.10, 5.6, 4.0, 3.6/)
-    colours = (/'RED  ','GREEN','BLUE '/)
+    colors = (/'RED  ','GREEN','BLUE '/)
     ! note padding so strings are 5 chars
     ints    = (/ 100, (i, i=1,8), 100 /)
-     \end{lstlisting}
+\end{lstlisting}
  Then:
 \begin{itemize}
 \item constructors and array sections must conform.
@@ -357,13 +389,14 @@ Used to give arrays or sections of arrays specific values. For example,
 
 \footnotesize{
  RESHAPE is a general intrinsic function which delivers an array of a specific shape: 
-  \begin{lstlisting}[style=Fortran]
-RESHAPE(SOURCE, SHAPE)
-   \end{lstlisting}
+\begin{lstlisting}[style=Fortran]
+RESHAPE(original_shape, new_shape)
+ \end{lstlisting}
  e.g.:
-   \begin{lstlisting}[style=Fortran]
+  \FortranStyle
+\begin{lstlisting}[style=Fortran]
 A = RESHAPE((/1,2,3,4/),(/2,2/))
-   \end{lstlisting}
+\end{lstlisting}
 A is filled in array element order and looks like: 
 
 \begin{Verbatim}
@@ -376,20 +409,43 @@ A is filled in array element order and looks like:
 
 % --- Slide
 \begin{frame}[fragile]
+\frametitle{DATA}
+
+\footnotesize{
+ Use the DATA when other methods are tedious and/or impossible.  
+ \begin{lstlisting}[style=Fortran]
+DATA variable / list / ...
+ \end{lstlisting}
+ e.g.:
+  \FortranStyle
+\begin{lstlisting}[style=Fortran]
+INTEGER :: a(4), b(2,2), c(10)
+DATA a /4,3,2,1/
+DATA a /4*0/ ! * is not multiplication operator!
+DATA b(1,:) /0,0/ 
+DATA b(2,:) /1,1/
+DATA (c(i),i=1,10,2) /5*1/ 
+DATA (c(i),i=2,10,2) /5*2/
+\end{lstlisting}
+}
+\end{frame}
+
+% --- Slide
+\begin{frame}[fragile]
 \frametitle{Array Constructors in Initialization Statements}
 
 \footnotesize{
 Named array constants can be created
-  \FortranStyle
+\FortranStyle
  \begin{lstlisting}[style=Fortran]
-    INTEGER, DIMENSION(3), PARAMETER :: &
-        Unit_vec = (/1,1,1/)
-    CHARACTER(LEN=*), DIMENSION(3),  PARAMETER :: &
-        lights =  (/'RED  ','BLUE ','GREEN'/)
-    REAL, DIMENSION(3,3), PARAMETER :: &
-        unit_matrix = RESHAPE( &
-        (/1,0,0,0,1,0,0,0,1/),(/3,3/))
- \end{lstlisting}
+integer, dimension(3), parameter :: &
+    unit_vec = (/1,1,1/)
+character(len=*), dimension(3),  parameter :: &
+    lights =  (/'red  ','blue ','green'/)
+real, dimension(3,3), parameter :: &
+    unit_matrix = reshape( &
+    (/1,0,0,0,1,0,0,0,1/),(/3,3/))
+\end{lstlisting}
  In the second statement all strings must be same length. 
 }
 
@@ -400,18 +456,18 @@ Named array constants can be created
 \frametitle{Allocatable Arrays}
 
 \footnotesize{
-Fortran allows arrays to be created on-the-fly; these are known as \emph{deferred-shape} arrays and use dynamic heap storage. \\
-Deferred-shape arrays are
+Fortran allows arrays to be created on-the-fly; these are known as \emph{allocatable} arrays and use \emph{dynamic heap} storage. Allocatable arrays are
 \begin{itemize}
 \item declared like explicit-shape arrays but without the extents and with the ALLOCATABLE attribute.
 \begin{itemize}
-\item INTEGER, DIMENSION(:), ALLOCATABLE :: ages
-\item REAL, DIMENSION(:,:), ALLOCATABLE :: speed
+\item integer, dimension(\textcolor{red}{:}), ALLOCATABLE :: ages
+\item real, dimension(\textcolor{red}{:},\textcolor{red}{:}), ALLOCATABLE :: speed
  \end{itemize}
  \item given a size in an ALLOCATE statement which assigns an area of memory to the object.
 \begin{itemize}
 \item ALLOCATE(ages(1:10), STAT=ierr)
 \item ALLOCATE(speed(-lwb:upb,-50:0),STAT=ierr)
+%The ALLOCATE statement associates storage with an allocatable array:
  \end{itemize}
 \item the optional STAT= field reports on the success of the storage request. If the INTEGER variable ierr is zero the request was successful otherwise it failed. 
  \end{itemize}
@@ -426,18 +482,41 @@ Deferred-shape arrays are
 \footnotesize{
 Heap storage can be reclaimed using the DEALLOCATE statement:
  \begin{lstlisting}[style=Fortran]
-IF (ALLOCATED(ages)) DEALLOCATE(ages,STAT=ierr)
+DEALLOCATE(ages,STAT=ierr)
  \end{lstlisting}
 
 \begin{itemize}
 \item it is an error to deallocate an array without the ALLOCATE attribute or one that has not been previously allocated space.
-\item there is an intrinsic function, ALLOCATED, which returns a scalar LOGICAL values reporting on the status of an array. 
+\item there is an intrinsic function, ALLOCATED, which returns a scalar LOGICAL values reporting on the status of an array. \\
+ \begin{lstlisting}[style=Fortran]
+if (ALLOCATED(ages)) DEALLOCATE(ages,STAT=ierr)
+ \end{lstlisting}
+
 \item the STAT= field is optional but its use is recommended
 \item if a procedure containing an allocatable array which does not have the SAVE attribute is exited without the array being DEALLOCATE d then this storage becomes inaccessible
  \end{itemize}
 }
 
 \end{frame}
+
+% --- Slide
+\begin{frame}[fragile]
+\frametitle{Beware of memory leaks}
+
+It is the program that takes responsibility for allocating and deallocating storage to \textbf{static} variables.\\
+However, when using dynamic arrays this responsibility falls to the \textbf{programmer}. 
+
+\begin{itemize}
+\item Storage allocated to local variables (in say a subroutine or function - more on this later) must be \textbf{deallocated} before the exiting the procedure. 
+\begin{itemize}
+\item When leaving a procedure all local variables are deleted from memory and the program releases any associated storage for use elsewhere, however any storage allocated through the ALLOCATE statement will remain "in use" even though it has no associated variable name!
+ \end{itemize}
+\item Storage allocated, but no longer accessible, cannot be released or used elsewhere in the program and is said to be in an "undefined" state This reduction in the total storage available to the program called is a "memory leak".
+ \end{itemize}
+
+
+\end{frame}
+
 
 
 % --- Slide
@@ -512,8 +591,8 @@ There is a block form of masked assignment
 \footnotesize{
 A 1D array can be used to subscript an array in a dimension. Consider
 \begin{lstlisting}[style=Fortran]
-    INTEGER, DIMENSION(5) :: V = (/1,4,8,12,10/)
-    INTEGER, DIMENSION(3) :: W = (/1,2,2/)
+    integer, dimension(5) :: V = (/1,4,8,12,10/)
+    integer, dimension(3) :: W = (/1,2,2/)
  \end{lstlisting}
 \begin{itemize}
 \item A(V) is A(1), A(4), A(8), A(12), and A(10).
@@ -538,18 +617,17 @@ A 1D array can be used to subscript an array in a dimension. Consider
 \begin{frame}[fragile]
 \frametitle{Exercise}
 
-Consider the following declaration:
-  \FortranStyle
- \begin{lstlisting}[style=Fortran]
- integer, parameter :: MONTHS_PER_YEAR  =  12
- INTEGER, parameter :: &
- DAYS_PER_MONTH (MONTHS_PER_YEAR) = (/  &
- 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31  /)
- \end{lstlisting}
+We will solve a computational problem that converts temperatures in Fahrenheit to Kelvin\\
+\begin{equation}
+K = \frac{5}{9}(F - 32) + 273.15
+\end{equation}
+Using a text editor open the file exercise.F90 and \emph{complete the empty code blocks}. You will:
 \begin{itemize}
-\item What is the output of DAYS\_PER\_MONTH(1:12:2)?
-\item Extract from DAYS\_PER\_MONTH all the months with 30 days and assign the result to a variable. Should be a one-liner?
+\item Perform the conversion
+\item Print the F and K values
+\item Print the log of F (careful!)
  \end{itemize}
+Then build the executable and run the code using the provided Makefile.
 
 \end{frame}
 

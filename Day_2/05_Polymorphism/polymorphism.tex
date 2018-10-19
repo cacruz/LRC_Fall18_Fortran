@@ -1,0 +1,429 @@
+\documentclass[11pt]{beamer}
+\setbeamertemplate{navigation symbols}{}
+ \setbeamercovered{transparent}
+\usepackage{listings}
+%\usetheme{Copenhagen}
+\usetheme{Singapore}
+%\usetheme{Madrid}
+%\usetheme{Hannover}
+%\usetheme{boxes}
+%\usetheme{Boadilla}
+\usefonttheme[onlymath]{serif}
+\usecolortheme{beaver}
+\usepackage{textpos}
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+\usepackage{multicol}
+\usepackage{lipsum}
+\parskip 1ex
+
+\newcommand\FontAcolumn{\fontsize{6}{7.2}\selectfont}
+\newcommand\FontBcolumn{\fontsize{8}{7.2}\selectfont}
+\newcommand\FontCcolumn{\fontsize{10}{7.2}\selectfont}
+\newcommand\FontDcolumn{\fontsize{11}{7.2}\selectfont}
+
+\definecolor{gray97}{gray}{.97}
+\definecolor{gray75}{gray}{.75}
+\definecolor{gray75}{gray}{.45}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% This is used to add line number to source code %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstset{
+        language=fortran,        % language of the code
+        basicstyle=\small\ttfamily, % size of the fonts used for the code
+        %basicstyle=\normalsize, % size of the fonts used for the code
+        numbers=left,           % where to put line numbers
+        numberstyle=\tiny,     % size of the fonts used for line numbers
+        stepnumber=1, 
+        numbersep=8pt,
+        numberfirstline=false,
+        showstringspaces=false, % underline spaces within strings
+        aboveskip=-20pt,
+        numbersep=15pt,          % how far the line-numbers are from the code
+        frame=Ltb,         % addition of a left frame line on source
+        % code
+        framerule=0pt,
+        columns=fullflexible,
+        framextopmargin=3pt,
+        framexbottommargin=3pt,
+        framexleftmargin=0.4cm,
+        framesep=0pt,
+        rulesep=.4pt,
+        backgroundcolor=\color{gray97},
+        rulesepcolor=\color{black},
+        stringstyle=\ttfamily,
+        showstringspaces=false,
+        basicstyle=\ttfamily,
+        keywordstyle=\color{red}, % color keywords
+        commentstyle=\color{green}    % color comments
+        }
+
+
+\lstdefinestyle{Fortran}{language=[90]Fortran}
+
+\newcommand\FortranStyle
+{
+\lstset{
+frame=Ltb,
+framerule=0pt,
+columns=fullflexible,
+aboveskip=0.5cm,
+framextopmargin=3pt,
+framexbottommargin=3pt,
+framexleftmargin=0.4cm,
+framesep=0pt,
+rulesep=.4pt,
+backgroundcolor=\color{gray97},
+rulesepcolor=\color{black},
+stringstyle=\ttfamily,
+showstringspaces=false,
+basicstyle=\ttfamily,
+commentstyle=\color{green},
+keywordstyle=\color{red},
+numbers=left,
+numbersep=15pt,
+numberstyle=\tiny,
+numberfirstline=false,
+breaklines=true,
+ tabsize=2,
+ extendedchars=true,
+keepspaces,
+}
+}
+
+\newcommand\FortranStyleA
+{
+\lstset{
+frame=Ltb,
+framerule=0pt,
+columns=fullflexible,
+aboveskip=0.5cm,
+framextopmargin=3pt,
+framexbottommargin=3pt,
+framexleftmargin=0.4cm,
+framesep=0pt,
+rulesep=.4pt,
+backgroundcolor=\color{gray97},
+rulesepcolor=\color{black},
+stringstyle=\ttfamily,
+showstringspaces=false,
+basicstyle=\ttfamily,
+commentstyle=\color{green},
+keywordstyle=\color{red},
+numbersep=15pt,
+numberstyle=\tiny,
+numberfirstline=false,
+breaklines=true,
+ tabsize=2,
+ extendedchars=true,
+keepspaces,
+}
+}
+
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\newcommand{\light}[1]{\textcolor{lightgray}{#1}}
+    
+\def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
+  \hbox{}\nobreak\hfil(#1)%
+  \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}}
+  {\signed{\usebox\mybox}\end{quote}}
+
+
+% items enclosed in square brackets are optional; explanation below
+\title{Polymorphism}
+\author{Jules Kouatchou}
+\institute{
+  NASA GSFC Code 606 (ASTG)\\
+  Greenbelt, Maryland 20771\\[1ex]
+  \texttt{Jules.Kouatchou@nasa.gov}
+}
+\date{October 25, 2018}
+
+\begin{document}
+
+% --- Title page ---
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\logo{%
+  \includegraphics[width=1cm,height=1cm,keepaspectratio]{../../shared/nasa-ball.png}%
+  \hspace{\dimexpr\paperwidth-2cm-5pt}%
+  \includegraphics[width=1cm,height=1cm,keepaspectratio]{../../shared/ssai-logo.png}%
+}
+
+
+% --- Slide
+
+\begin{frame}{Agenda}
+
+\textcolor{red}{Polymorphism}
+    \begin{itemize}
+    \item Introduction
+    \item Procedure Polymorphism
+    \item Data Polymorphism
+      \begin{itemize}
+      \item Polymorphic Pointer Variable
+      \item Allocatable Polymorphic Variable
+      \end{itemize}
+    \end{itemize}
+  
+
+\end{frame}
+
+
+\frame[containsverbatim]{
+  \frametitle{Introduction}
+  \begin{itemize}
+   \item Use to describe a variety of techniques employed
+     by programmers to create flexible and reusable software
+     components.
+   \item A polymorphic object is an entity, such as a \textbf{variable} or a
+     \textbf{procedure},  that can hold or operate on values of differing types during the program's execution.
+   \end{itemize}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Introduction - Cont}
+  There are two basic types of polymorphism:
+  \begin{description}
+   \item[Procedure polymorphism:] Deals with procedures that can operate on a variety of data types and values.
+   \item[Data polymorphism:] Deals with program variables that can store and operate on a variety of data types and values.
+   \end{description}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Procedure Polymorphism}
+  \begin{itemize}
+   \item Occurs when a procedure, such as a function or a subroutine, can take a variety of data types as arguments
+   \item Accomplished when a procedure has one or more dummy arguments declared with the \textbf{CLASS} keyword.
+   \end{itemize}
+ }
+
+ \frame[containsverbatim]{
+   \frametitle{Example}
+
+ {\footnotesize
+  \begin{semiverbatim}
+  \begin{lstlisting}
+type, extends(shape) :: polygon
+   integer :: color
+contains
+   procedure :: get_area
+   procedure :: set_color
+end type polygon
+
+subroutine set_color(plg, color)
+    class(polygon), intent(inOut) :: plg
+    integer, intent(in) :: color
+    plg%color = color
+end subroutine set_color
+  \end{lstlisting}
+\end{semiverbatim}
+}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Comments}
+  \begin{itemize}
+   \item The \texttt{set\_color} subroutine takes two arguments,
+     \texttt{plg} and \texttt{color}.
+     \item The \texttt{plg} dummy argument is polymorphic, based on
+       the usage of \texttt{class(plygon)}.
+     \item The subroutine can operate on objects that satisfy the "is
+       a" polygon relationship. So, \texttt{set\_color}  can be called
+       with a  \texttt{polygon}, \texttt{circle},
+       \texttt{rectangle}, \texttt{square}, or any future type extension of shape.
+   \end{itemize}
+}
+
+
+ \frame[containsverbatim]{
+   \frametitle{Another Example}
+
+ {\tiny
+  \begin{semiverbatim}
+  \begin{lstlisting}
+subroutine initialize_polygon(plg, color, radius, length, width)
+    class(polygon) :: plg
+    integer :: color
+    real, optional :: radius
+    real, optional :: length, width
+
+    plg%color = color
+    
+    SELECT TYPE (plg)
+    type is (polygon)
+    class is (circle)
+        if (present(radius))  then
+           plg%radius = radius
+        else
+           plg%radius = 0
+        endif
+    class is (rectangle)
+        if (present(length))  then
+           plg%length = length
+        else
+           plg%length = 0
+        endif
+        if (present(width)) then
+            plg%width = width
+        else
+            plg%width = 0
+        endif
+    class default
+         stop 'initialize: unexpected type for plg object!'
+    end select 
+end subroutine initialize_polygon
+  \end{lstlisting}
+\end{semiverbatim}
+}
+}
+
+
+\frame[containsverbatim]{
+  \frametitle{Data Polymorphism}
+ \begin{itemize}
+  \item A polymorphic variable is a variable whose data type is
+    dynamic at runtime.
+  \item It must be a pointer variable, allocatable variable, or a
+    dummy argument.
+  \end{itemize}
+}
+
+
+\frame[containsverbatim]{
+  \frametitle{Example}
+
+  {\footnotesize
+  \begin{semiverbatim}
+  \begin{lstlisting}
+subroutine init(plg)
+  class(plygon) :: plg              ! polymorphic dummy argument
+  class(plygon), pointer :: p       ! polymorphic pointer variable
+  class(plygon), allocatable :: alp ! polymorphic allocatable variable
+end subroutine init
+  \end{lstlisting}
+\end{semiverbatim}
+}
+
+\begin{itemize}
+\item The \texttt{plg}, \texttt{p} and \texttt{alp} polymorphic variables
+  can each hold values of type shape or any type extension of polygon.
+\item The \texttt{plg} dummy argument receives its type and value from the actual argument to \texttt{plg} of subroutine \texttt{init()}.
+\end{itemize}
+}
+
+% --- Slide ---
+\frame[containsverbatim]{
+  \frametitle{Polymorphic Pointer Variable}
+The polymorphic pointer variable \texttt{p} can point to an object of type \texttt{polygon} or any of its extensions.
+  {\tiny
+  \begin{semiverbatim}
+  \begin{lstlisting}
+subroutine init(plg)
+  class(polygon), target  :: plg
+  class(polygon), pointer :: p
+  
+  select type (plg)
+  type is (polygon)
+    p => plg
+    :  ! shape specific code here
+  type is (circle)
+    p => plg
+    :  ! rectangle specific code here
+  type is (rectangle)
+    p => plg
+    :  ! rectangle specific code here
+  type is (square)
+    p => plg
+    :  ! square specific code here
+  class default
+    p => null()
+  end select
+end subroutine init
+  \end{lstlisting}
+\end{semiverbatim}
+}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Allocatable Polymorphic Variable}
+  \begin{itemize}
+   \item An allocatable polymorphic variable receives its type and
+     optionally its value at the point of its allocation.
+   \item By default, the dynamic type of a polymorphic allocatable variable is the same as its declared type after executing an allocate statement.
+  \end{itemize}
+
+  {\footnotesize
+  \begin{semiverbatim}
+  \begin{lstlisting}
+class(polygon), allocatable :: alp1, alp2
+allocate(alp1)
+allocate(rectangle::alp2)
+  \end{lstlisting}
+\end{semiverbatim}
+}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Example}
+  {\tiny
+  \begin{semiverbatim}
+  \begin{lstlisting}
+subroutine init(plg)
+  class(polygon) :: plg
+  class(polygon), allocatable :: alp
+  
+  select type (plg)
+  type is (polygon)
+    allocate(polygon::alp)
+    select type(alp)
+    type is (polygon)
+      alp = plg   ! copy sh
+    end select
+  type is (circle)
+    allocate(circle::alp)
+    select type(alp)
+    type is (circle)
+      alp = plg   ! copy sh
+    end select
+  type is (rectangle)
+    allocate(rectangle::alp)
+     select type (alp)
+     type is (rectangle)
+       alp = plg ! copy plg
+     end select
+  type is (square)
+    allocate(square::alp)
+    select type (alp)
+    type is (square)
+      alp = plg   ! copy plg
+    end select
+  end select
+end subroutine init
+  \end{lstlisting}
+\end{semiverbatim}
+}
+}
+
+
+
+\frame[containsverbatim]{
+  \frametitle{Exercise }
+  \begin{itemize}
+  \item For each child class, implement a method that computes the perimeter of a polygon
+    \item Write a subroutine that takes as argument an arbitrary \texttt{polygon}
+      and prints the perimeter of the \texttt{polygon}.
+    \item Write a simple program that initialzes various polygons and calls the above subroutine.
+   \end{itemize}
+}
+
+
+
+\end{document}

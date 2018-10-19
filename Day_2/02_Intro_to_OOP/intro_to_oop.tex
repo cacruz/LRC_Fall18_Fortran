@@ -17,6 +17,9 @@
 \usepackage{lipsum}
 \parskip 1ex
 
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+
 \newcommand\FontAcolumn{\fontsize{6}{7.2}\selectfont}
 \newcommand\FontBcolumn{\fontsize{8}{7.2}\selectfont}
 \newcommand\FontCcolumn{\fontsize{10}{7.2}\selectfont}
@@ -24,7 +27,9 @@
 
 \definecolor{gray97}{gray}{.97}
 \definecolor{gray75}{gray}{.75}
-\definecolor{gray75}{gray}{.45}
+\definecolor{gray45}{gray}{.45}
+
+\setbeamertemplate{itemize items}[square]
 
 \lstdefinestyle{Fortran}{language=[90]Fortran}
 
@@ -101,7 +106,7 @@ keepspaces,
 
 
 % items enclosed in square brackets are optional; explanation below
-\title{Object Oriented Fortran}
+\title{Object Oriented Programming with Fortran}
 \subtitle{An Overview}
 \author{Carlos Cruz}
 \institute{
@@ -110,6 +115,8 @@ keepspaces,
   \texttt{carlos.a.cruz@nasa.gov}
 }
 \date{October 25, 2018}
+
+
 
 \begin{document}
 
@@ -129,22 +136,21 @@ keepspaces,
 
 \begin{frame}{Agenda}
 
-\textcolor{red}{Introduction to OOP}
-    \begin{itemize}
-        \item History of OOP
-        \item Why OOP?
-        \item Basic Concepts
+\textcolor{red}{Object Oriented Programming with Fortran}
+    \bi
+        \item Object Oriented Programming
+        \bi
+        		\item Background
+        \ei
+        \item OOP Features in Fortran 2003
+        \bi
+        	\item Data Abstraction
+        	\item Encapsulation
+        	\item Inheritance
+        	\item Polymorphism
+        \ei
         \item Examples
-    \end{itemize}
-
-\end{frame}
-
-
-% --- Slide ---
-
-\begin{frame}{Motivation}
-
-The basic question we face as computational scientists is: how do we deal with computation?
+    \ei
 
 \end{frame}
 
@@ -153,154 +159,388 @@ The basic question we face as computational scientists is: how do we deal with c
 
 \begin{frame}{Programming paradigms}
 % a way of conceptualizing what it means to perform computation and how tasks to be carried out on the computer should be structured and organized
-\textbf{Functional programming}\\
-\textbf{Component based programming}\\
-\textbf{Procedural programming}
-\begin{itemize}
-  \item C, Fortran are procedural programming languages
-\begin{itemize}
-  \item single program constructed from \textbf{functions} and \textbf{subroutines}
-  %emphasis is on doing things so that large programs are divided into smaller programs known as functions.
- \item modularity and re-use achieved through grouping of procedures (\textbf{modules})
-  \item data scope based on function scope
+\bi
+\item \textbf{Procedural}
+	\bi
+	\item C, Fortran90 
+	\bi
+		\item Focus on writing good functions and procedures %what-to-solve
+		%emphasis is on doing things so that large programs are divided 
+		% into smaller programs known as functions.
+		\item Computation changes the program state
+	\ei
+	\ei
+\item \textbf{Functional}
+	\bi
+	\item Lisp, Haskell
+	\bi
+		\item Emphasizes use of state-less functions %how-to-solve
+	\ei
+	\ei
+\item \textbf{Object Oriented}
+	\bi
+	\item Smalltalk, Java
+	\bi
+		\item Programs manipulate objects
+		\item Objects have an internal state
+	\ei
+	\ei
+ \item \textbf{Multi-paradigm}
+	\bi
+	\item C++, Python, Fortran2003
+	\ei
+
  \end{itemize}
- \item generally no explicit link between data and functions
-  \item data is accessible and modifiable by functions
-\end{itemize}
 
 \end{frame}
 
 % --- Slide ---
 
 \begin{frame}{Object Oriented Programming (OOP)}
+
 OOP is a major paradigm shift. It grew out of perceived weaknesses of \emph{structured programming}:
-
-\begin{itemize}
-  \item programs consisted of (global) data structures and disjoint procedures for accessing/modifying the data structures.
-  \item difficulties arise especially for large systems composed in this manner.
-\end{itemize}
-  
-  Weakness \#1:
-\begin{itemize}
-
-  \item Lack of support for  \textbf{encapsulation}. 
-  \begin{itemize}
-  \item Modifications are difficult/expensive.
+%  SP is a programming paradigm aimed at improving the clarity, quality, and development time of a computer program by making extensive use of the structured control flow constructs of selection (if/then/else) and repetition (while and for), block structures, and subroutines.
+\begin{columns}[onlytextwidth,t]
+  \begin{column}{0.48\textwidth}
+  \bi
+   %\item Lack of support for  \textbf{encapsulation}. 
+   %\bi
+  \item \textcolor{magenta}{Modifications are difficult/expensive.
   \item Developers need to be expert in all parts of the application.
-  \item Limited modularity.
-  \end{itemize}
+  \item Limited modularity.}
+  %\ei
+  \item [\textcolor{white}{\textbullet}] \textcolor{white}{Centralized development constraint.}
 
- \end{itemize}
+   %\item Lack of support for  \textbf{inheritance}. 
+  \ei
+  \end{column}
+  \begin{column}{0.48\textwidth}
+  \bi
+  %\item Lack of support for  \textbf{polymorphism}. 
+  \item [\textcolor{white}{\textbullet}] \textcolor{white}{Multiple implementations of the same functionality.}
+% Support for variations leads to pervasive nested conditionals which increase complexity and errors.
+
+  %\item Lack of support for \textbf{templates}
+  \item [\textcolor{white}{\textbullet}] \textcolor{white}{Need to support several data structures that are nearly identical but vary in some systematic ways.
+\item [\textcolor{white}{\textbullet}] Difficult to maintain consistency as such structures are extended.}
+
+  \ei
+
+  \end{column}
+\end{columns}
+
+  \vfill
+  \scriptsize{
+\quad \quad \quad \textcolor{magenta}{encapsulation}
+\quad \quad \quad \quad \quad \quad 
+\quad \quad \quad \quad \quad \quad \quad \textcolor{white}{polymorphism}\\
+\quad \quad \quad \textcolor{white}{inheritance}
+\quad \quad \quad \quad \quad \quad 
+\quad \quad \quad \quad \quad \quad \quad \quad \textcolor{white}{templates}
+}
+% The main objectives of OO programming are expansibility, reusability, and compatibility.
 
 \end{frame}
+
+% --- Slide ---
+
+\begin{frame}{Object Oriented Programming (OOP)}
+
+OOP is a major paradigm shift. It grew out of perceived weaknesses of \emph{structured programming}:
+%  SP is a programming paradigm aimed at improving the clarity, quality, and development time of a computer program by making extensive use of the structured control flow constructs of selection (if/then/else) and repetition (while and for), block structures, and subroutines.
+\begin{columns}[onlytextwidth,t]
+  \begin{column}{0.48\textwidth}
+  \bi
+   %\item Lack of support for  \textbf{encapsulation}. 
+   %\bi
+  \item \textcolor{magenta}{Modifications are difficult/expensive.
+  \item Developers need to be expert in all parts of the application.
+  \item Limited modularity.}
+  %\ei
+  \item \textcolor{cyan}{Centralized development constraint.}
+
+   %\item Lack of support for  \textbf{inheritance}. 
+  \ei
+  \end{column}
+  \begin{column}{0.48\textwidth}
+  \bi
+  %\item Lack of support for  \textbf{polymorphism}. 
+  \item [\textcolor{white}{\textbullet}] \textcolor{white}{Multiple implementations of the same functionality.}
+% Support for variations leads to pervasive nested conditionals which increase complexity and errors.
+
+  %\item Lack of support for \textbf{templates}
+  \item [\textcolor{white}{\textbullet}] \textcolor{white}{Need to support several data structures that are nearly identical but vary in some systematic ways.
+\item [\textcolor{white}{\textbullet}] Difficult to maintain consistency as such structures are extended.}
+
+  \ei
+
+  \end{column}
+\end{columns}
+
+  \vfill
+  \scriptsize{
+\quad \quad \quad \textcolor{magenta}{encapsulation}\\
+\quad \quad \quad \textcolor{cyan}{inheritance}
+}
+% The main objectives of OO programming are expansibility, reusability, and compatibility.
+
+\end{frame}
+
+
+\begin{frame}{Object Oriented Programming (OOP)}
+
+OOP is a major paradigm shift. It grew out of perceived weaknesses of \emph{structured programming}:
+%  SP is a programming paradigm aimed at improving the clarity, quality, and development time of a computer program by making extensive use of the structured control flow constructs of selection (if/then/else) and repetition (while and for), block structures, and subroutines.
+\begin{columns}[onlytextwidth,t]
+  \begin{column}{0.48\textwidth}
+  \bi
+   %\item Lack of support for  \textbf{encapsulation}. 
+   %\bi
+  \item \textcolor{magenta}{Modifications are difficult/expensive.
+  \item Developers need to be expert in all parts of the application.
+  \item Limited modularity.}
+  %\ei
+  \item \textcolor{cyan}{Centralized development constraint.}
+
+   %\item Lack of support for  \textbf{inheritance}. 
+  \ei
+  \end{column}
+  \begin{column}{0.48\textwidth}
+  \bi
+  %\item Lack of support for  \textbf{polymorphism}. 
+  \item \textcolor{green}{Multiple implementations of the same functionality.}
+% Support for variations leads to pervasive nested conditionals which increase complexity and errors.
+
+  %\item Lack of support for \textbf{templates}
+  \item [\textcolor{white}{\textbullet}] \textcolor{white}{Need to support several data structures that are nearly identical but vary in some systematic ways.
+\item [\textcolor{white}{\textbullet}] Difficult to maintain consistency as such structures are extended.}
+
+  \ei
+
+  \end{column}
+\end{columns}
+
+  \vfill
+  \scriptsize{
+\quad \quad \quad \textcolor{magenta}{encapsulation}
+\quad \quad \quad \quad \quad \quad 
+\quad \quad \quad \quad \quad \quad \quad \textcolor{green}{polymorphism}\\
+\quad \quad \quad \textcolor{cyan}{inheritance}
+}
+% The main objectives of OO programming are expansibility, reusability, and compatibility.
+
+\end{frame}
+
 
 
 % --- Slide ---
 
 \begin{frame}{Object Oriented Programming (OOP)}
 
-  Weakness \#2:
-\begin{itemize}
+OOP is a major paradigm shift. It grew out of perceived weaknesses of \emph{structured programming}:
+%  SP is a programming paradigm aimed at improving the clarity, quality, and development time of a computer program by making extensive use of the structured control flow constructs of selection (if/then/else) and repetition (while and for), block structures, and subroutines.
+\begin{columns}[onlytextwidth,t]
+  \begin{column}{0.48\textwidth}
+  \bi
+   %\item Lack of support for  \textbf{encapsulation}. 
+   %\bi
+  \item \textcolor{magenta}{Modifications are difficult/expensive.
+  \item Developers need to be expert in all parts of the application.
+  \item Limited modularity.}
+  %\ei
+  \item \textcolor{cyan}{Centralized development constraint.}
 
-  \item Lack of support for  \textbf{inheritance}. 
-  \begin{itemize}
-  \item Isolated use cases that require different logic cannot be directly supported. Workarounds are tedious at best and tend to bloat logic and data structures.
-  \item Centralized development constraint.   
-  \begin{itemize}
-  \item If an external developer creates a useful extension, she must push the extension back to the original developers in order to be of use to other users.
-  \end{itemize}
-   \end{itemize}
+   %\item Lack of support for  \textbf{inheritance}. 
+  \ei
+  \end{column}
+  \begin{column}{0.48\textwidth}
+  \bi
+  %\item Lack of support for  \textbf{polymorphism}. 
+  \item \textcolor{green}{Multiple implementations of the same functionality.}
+% Support for variations leads to pervasive nested conditionals which increase complexity and errors.
 
- \end{itemize}
+  %\item Lack of support for \textbf{templates}
+  \item \textcolor{red}{Need to support several data structures that are nearly identical but vary in some systematic ways.
+\item Difficult to maintain consistency as such structures are extended.}
+
+  \ei
+
+  \end{column}
+\end{columns}
+
+  \vfill
+  \scriptsize{
+\quad \quad \quad \textcolor{magenta}{encapsulation}
+\quad \quad \quad \quad \quad \quad 
+\quad \quad \quad \quad \quad \quad \quad \textcolor{green}{polymorphism}\\
+\quad \quad \quad \textcolor{cyan}{inheritance}
+\quad \quad \quad \quad \quad \quad 
+\quad \quad \quad \quad \quad \quad \quad \quad \textcolor{red}{templates}
+}
+% The main objectives of OO programming are expansibility, reusability, and compatibility.
 
 \end{frame}
 
-% --- Slide ---
-
-\begin{frame}{Object Oriented Programming (OOP)}
-
-  Weakness \#3:
-\begin{itemize}
-
-  \item Lack of support for  \textbf{polymorphism}. 
-  \item Sometimes referred to as \textbf{dynamic dispatch}.
-  \item Common scenarios involve multiple implementations of the same functionality.   
-  % Support for variations leads to pervasive nested conditionals which increase complexity and errors.
-  \item Examples:
-  \begin{itemize}
-  \item Support for multiple coordinate systems or grids
-  \item Support for multiple nonlinear solvers
-  \end{itemize}
-  
- \end{itemize}
-  
-Weakness \#4: Lack of support for \textbf{templates}
- \begin{itemize}
-\item Developers often encounter the need to support several data structures that are nearly identical but vary in some systematic ways.
-\item Difficult to maintain consistency as such structures are extended.
-% E.g. real and integer arrays
- \end{itemize}
-
-\end{frame}
 
 % --- Slide
 
 \begin{frame}{What is OOP?} 
 
-OOP is a paradigm in which the fundamental participants are \textbf{objects} which embody both state and behavior.
-\begin{columns}[onlytextwidth,t]
+OOP is a paradigm in which a program's state and behavior are bundled into \textbf{objects}.
+\begin{columns}
     \begin{column}{0.48\textwidth}
         
 %\begin{center} 
-  \includegraphics[width=1.2\textwidth]{../../shared/oop_building_blocks.jpg} 
+  \includegraphics[width=1.2\textwidth]{../../shared/oop_features.png} 
 %\end{center} 
 
   \end{column}
   \begin{column}{0.48\textwidth}
 \scriptsize{
     \begin{itemize}
-        \item A \textbf{class} is a set of properties and related procedures which access/modify those properties.
-        \item \textbf{Objects} are individual instances of classes.
+        \item A \textbf{class} is a data type
+        \bi
+        		\item \scriptsize{Attributes}
+		\item \scriptsize{Behaviors}
+        \ei
+        \item An \textbf{Object} is an \textbf{instance} of a class.
         \begin{itemize}
         \item \scriptsize{Behavior of objects is expressed in terms of methods which are the class procedures. Methods have privileged access to object state.}
         \item \scriptsize{Method invocation may look different than regular procedure calls.}
         \end{itemize}
-        \item Within a program, objects interact with each other by sending messages (i.e. invoking methods)
+        %\item 
     \end{itemize}
  }
   \end{column}
 \end{columns}
+\scriptsize{Within a program, objects interact with each other by sending messages (i.e. invoking methods)}
 
+\end{frame} 
+
+% --- Slide
+
+\begin{frame}{Caveats} 
+
+    \begin{itemize}
+	\item OOP is a major paradigm shift which generally takes years to fully absorb.
+        \item We hope to \emph{motivate} the rationale for using OO Fortran in some circumstances.
+    \end{itemize}
+
+How do we write Fortran programs using the OO paradigm?
+What OOP support does Fortran provide?
+
+\end{frame} 
+
+
+% --- Slide ---
+\begin{frame}[fragile]
+\frametitle{}
+
+
+\centering{
+\huge{
+A simple example.
+}
+}
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}{Geometrical Shapes} 
+\begin{center} 
+  \includegraphics[width=0.9\textwidth]{../../shared/shapes0.png} 
+\end{center} 
+
+\end{frame} 
+
+
+% --- Slide
+
+\begin{frame}{Abstraction and Inheritance} 
+
+\begin{center} 
+  \includegraphics[width=0.9\textwidth]{../../shared/shapes.png} 
+\end{center} 
 
 \end{frame} 
 
 
 % --- Slide ---
 
-\begin{frame}{Encapsulation}
-
-\textbf{Encapsulation} is the ability to isolate and hide implementation details within a software subsystem.
-\begin{itemize}
-
-  \item Instead of directly accessing items in a data structure, methods are invoked to retrieve/modify. 
-  \item If implementation details change, access methods are updated and client code remains unchanged.
-  \item E.g.
-  \begin{itemize}
-  \item month = date \% month $\leftarrow$  Assumes "month" field\\
-  becomes\\
-  month = getMonth(date) $\leftarrow$ Does not assume "month"
-  % Remember - the big wins are for complex software with many complex data structures.
- \end{itemize}
-  \item Note: Fortran 90 introduced strong encapsulation capabilities with public/private access for module entities.
-
- \end{itemize}
+\begin{frame}[fragile]{Encapsulation (1)}
+% controls visibility of names
+\textbf{Encapsulation} is the ability to isolate and hide implementation details within a software subsystem.\footnote{Note: Fortran 90 introduced strong encapsulation capabilities with public/private access for module entities.}
+\bi
+\item Encapsulation allows the creation of an object
+\item It is the mechanism can shield from outside interference or misuse. 
+\bi
+\item Within an object, \emph{some} of the code and/or data may be private to the object and inaccessible to anything outside the object. In Fortran we use the keyword \textbf{abstract}.
+\ei
+\ei
 
 \end{frame}
 
 % --- Slide ---
 
-\begin{frame}{Inheritance}
+\begin{frame}[fragile]{Encapsulation (2)}
 
+The Fortran concepts for encapsulation are \emph{derived types} and \emph{type bound procedures}\footnote{Introduced in Fortran 2003}
+\footnotesize{
+\FortranStyle
+\begin{lstlisting}[style=Fortran]
+module my_mod
+   implicit none
+   private ! hide everything by default
+   public my_type ! expose my_type
+   type my_type ! a derived type
+      private ! hide data details
+      real :: value
+   contains
+      procedure :: compute ! a public type-bound procedure
+   end type my_type
+end my_mod
+\end{lstlisting}
+}
+
+\end{frame}
+
+
+% --- Slide ---
+
+\begin{frame}{Data Abstraction}
+Abstraction can be thought of as a natural extension of encapsulation.
+% In object-oriented design, programs are often extremely large. And separate objects communicate with each other a lot. So maintaining a large codebase like this for years???with changes along the way???is difficult.
+% Abstraction is a concept aiming to ease this problem.
+\begin{columns}
+
+ \begin{column}{0.38\textwidth}
+        
+\begin{center} 
+  \includegraphics[width=0.7\textwidth]{../../shared/abstraction.png} 
+\end{center} 
+
+ \end{column}
+  
+  \begin{column}{0.7\textwidth}
+%\scriptsize{
+    \begin{itemize}
+        \item Abstraction refers to the act of representing essential features without including the background details or explanations.
+        \item Classes use concept of abstraction and are abstract data types
+	\item E.g. polygon is an abstraction of shape. Shape is a generalization of polygon.
+	\item Fortran 2003 supports data abstraction (keyword: \textbf{abstract})
+    \end{itemize}
+%	}
+
+  \end{column}
+\end{columns}
+Implementation changes, e.g. a software update, rarely affect the abstraction you use.
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}{Inheritance}
+% facilitates code re-use
 \textbf{Inheritance} is a way to form new classes using classes that have already been defined.
 \begin{itemize}
 
@@ -318,6 +558,7 @@ OOP is a paradigm in which the fundamental participants are \textbf{objects} whi
     \begin{itemize}
     \item frog is-a kind of amphibian
     \item sparse-matrix is-a kind of matrix
+    \item polygon is-a kind of shape
     \end{itemize}
   \end{itemize}
   
@@ -325,37 +566,12 @@ OOP is a paradigm in which the fundamental participants are \textbf{objects} whi
 
 \end{frame}
 
-% --- Slide
-
-\begin{frame}{Inheritance example} 
-Shape class
-\begin{center} 
-  \includegraphics[width=0.9\textwidth]{../../shared/shapeClass.png} 
-\end{center} 
-
-\end{frame} 
-
-% --- Slide ---
-
-\begin{frame}{Function/procedure pointers}
-
-While not strictly an OO concept, function pointers are a major part of the implementation of OO abstractions.
-\begin{itemize}
-
-  \item A function pointer is a \emph{data type} that is able to be associated with actual functions/procedures. The association is determined at \emph{run-time}.
-
-  \item Data structure with function pointer can be used to invoke different behavior in different contexts by associating with different actual functions.
-  \item Introduced in Fortran 2003
-  
- \end{itemize}
-
-\end{frame}
-
-
 
 % --- Slide ---
 
 \begin{frame}{Polymorphism}
+
+% accommodates various implementations
 
 \textbf{Polymorphism} is the capability of treating objects of a subclass as though they were members of the parent class.
 \begin{itemize}
@@ -367,55 +583,12 @@ While not strictly an OO concept, function pointers are a major part of the impl
     \end{itemize}
 
   \item Polymorphism and inheritance are distinct aspects but are typically applied together for maximum impact.
-  \item E.g. polymorphic variable myShape of class ?Shape? will compute the compute area/perimeter according to type set at run time.
+  \item E.g. polymorphic variable \emph{my\_shape} of \emph{class shape} will compute the compute area/perimeter according to type set at run time.
   
  \end{itemize}
 
 \end{frame}
 
-% --- Slide ---
-
-\begin{frame}{Advantages of Polymorphism}
-
-\textbf{Polymorphism} is the capability of treating objects of a subclass as though they were members of the parent class.
-\begin{itemize}
-
-  \item \emph{Generic programming} - high level algorithms are written in terms of the base class. Do not need to write variants for each subclass.
-      \begin{itemize}
-    \item E.g. an algorithm working with linear equations can be written in terms of methods for generic matrices, while the specific operations (factor(), solve()) are implemented differently for the subclasses (Dense, Sparse, Banded)
-    \end{itemize}
-
-  \item Allows customization \textbf{without} violating encapsulation.
-      \begin{itemize}
-    \item Extension does not require access to source of the base-class.
-    \end{itemize}
-  
- \end{itemize}
-
-\end{frame}
-
-% --- Slide ---
-
-\begin{frame}{Aside on Overloading}
-
-AKA \textbf{ad-hoc} polymorphism.
-\begin{itemize}
-
-  \item Ability to use the same name for multiple procedures.
-    \begin{itemize}
-    \item Actual procedure used is determined by type of arguments.
-    \end{itemize}
-
-  \item Not based upon any type hierarchy.
-    \begin{itemize}
-    \item No reuse is possible - each type must have a full implementation of the overloaded procedure.
-    \end{itemize}
- 
-   \item Introduced in Fortran 90 with interface blocks.
- 
- \end{itemize}
-
-\end{frame}
 
 % --- Slide ---
 
@@ -429,13 +602,36 @@ AKA \textbf{Parametric Polymorphism}.
     \item Routines using the type then specify which case to use.
     \end{itemize}
 
-  \item Fortran 2003 introduces a limited form.
+  \item Fortran 2003 introduces a limited form\footnote{Parameterized derived types}.
     \begin{itemize}
-    \item Derived types can be parameterized for ?kinds? and sizes.
+    \item Derived types can be parameterized for \emph{kinds} and sizes.
     \item Cannot parameterize integers and reals simultaneously.
     \end{itemize}
   
  \end{itemize}
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}{Design} 
+UML diagram
+\begin{center} 
+  \includegraphics[width=0.9\textwidth]{../../shared/shapes_uml.png} 
+\end{center} 
+
+\end{frame} 
+
+% --- Slide ---
+\begin{frame}[fragile]
+\frametitle{}
+
+
+\centering{
+\huge{
+Complex examples.
+}
+}
 
 \end{frame}
 
@@ -464,36 +660,26 @@ The clearest case for OOP in scientific models is in the "infrastructure" which 
 
 % --- Slide ---
 
-\begin{frame}{Examples}
+\begin{frame}{Other examples with significant use of Fortran 2003}
 
 \begin{itemize}
 
-  \item Air parcel trajectory code
+  \item NASA GISS modelE tracer infrastructure 
   \begin{itemize}
-  \item Needs to support multiple vector fields
-  \item Needs to support multiple integration schemes   
+  \item Supports \textbf{multiple} tracer/chemistry groups
+  \item Needs to support multiple integration schemes
+  \end{itemize}
+
+  \item The parallel Fortran logging framework for HPC applications 
+  \begin{itemize}
+  \item Supports multiple \textbf{logging} levels and multiple \textbf{output} streams
   \end{itemize}
   
-  \item Multiple Computational Grids
-
-  \begin{itemize}
-  \item E.g. for coupled Earth systems we might have
-  \begin{itemize}
-  \item Lat-Lon (Arakawa A, B, C, D)
-  \item Cubed-Sphere
-  \item Icosahedral
-   \end{itemize}
-   \item Some subsystems can "work" with any grid, while others are dependent on specific representations.
-   \item Coupling can require custom interpolations between grids.
-   \item Can we provide a software layer that supports various grid-specific operations while hiding the details from the layers that don't really care which grid is being used?
-   % Domain-decomposition, halo-fill
-   % I/O operations
-   \end{itemize}
-
+  \item pFUnit: A parallel Fortran unit testing framework for HPC applications
+  
  \end{itemize}
 
 \end{frame}
-
 
 % --- Slide
 
@@ -505,7 +691,7 @@ The clearest case for OOP in scientific models is in the "infrastructure" which 
 \begin{itemize}
 \item F2003 includes a solid support of object orientation.
 \item Provides opportunities to adopt newer technologies and modernize current earth science models.
-\item There is already a F2008 standard, but enhancements are "minor" (submodules, co-arrays)...and it may take a lot longer for compilers to adopt the standard.
+\item There is already a F2008 standard, but enhancements are "minor" (submodules, co-arrays).
 \end{itemize}
 
 \bigskip

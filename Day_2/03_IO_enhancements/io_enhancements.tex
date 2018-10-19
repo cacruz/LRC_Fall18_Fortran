@@ -26,6 +26,39 @@
 \definecolor{gray75}{gray}{.75}
 \definecolor{gray75}{gray}{.45}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% This is used to add line number to source code %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstset{
+        language=fortran,        % language of the code
+        basicstyle=\small\ttfamily, % size of the fonts used for the code
+        %basicstyle=\normalsize, % size of the fonts used for the code
+        numbers=left,           % where to put line numbers
+        numberstyle=\tiny,     % size of the fonts used for line numbers
+        stepnumber=1, 
+        numbersep=8pt,
+        numberfirstline=false,
+        showstringspaces=false, % underline spaces within strings
+        aboveskip=-20pt,
+        numbersep=15pt,          % how far the line-numbers are from the code
+        frame=Ltb,         % addition of a left frame line on source
+        % code
+        framerule=0pt,
+        columns=fullflexible,
+        framextopmargin=3pt,
+        framexbottommargin=3pt,
+        framexleftmargin=0.4cm,
+        framesep=0pt,
+        rulesep=.4pt,
+        backgroundcolor=\color{gray97},
+        rulesepcolor=\color{black},
+        stringstyle=\ttfamily,
+        showstringspaces=false,
+        basicstyle=\ttfamily,
+        keywordstyle=\color{red}, % color keywords
+        commentstyle=\color{green}    % color comments
+        }
+
 \lstdefinestyle{Fortran}{language=[90]Fortran}
 
 \newcommand\FortranStyle
@@ -130,37 +163,182 @@ keepspaces,
 
 \textcolor{red}{IO Enhancements}
     \begin{itemize}
-    \item Major Extensions
-    \begin{itemize}
     \item Stream IO
-    \item Derived Type IO
+    \item Asynchronous I/O
     \end{itemize}
-    \item Miscellaneous
-    \begin{itemize}
-    \item Recursive IO
-    \item ISO\_FORTRAN\_ENV
-    \item New Statements
-    \end{itemize}
-    \end{itemize}
+
+%\textcolor{red}{IO Enhancements}
+%    \begin{itemize}
+%    \item Major Extensions
+%    \begin{itemize}
+%    \item Stream IO
+%    \item Derived Type IO
+%    \end{itemize}
+%    \item Miscellaneous
+%    \begin{itemize}
+%    \item Recursive IO
+%    \item ISO\_FORTRAN\_ENV
+%    \item New Statements
+%    \end{itemize}
+%    \end{itemize}
   
 
 \end{frame}
 
+\frame[containsverbatim]{
+  \frametitle{Steam I/O - 1}
+Stream access is a new method for allowing fine-grained, 
+random positioning within a file for read/write operations.
+\begin{itemize}
+\item Complements pre-existing DIRECT and SEQUENTIAL access
+\item Advantages:
+   \begin{itemize}
+   \item Random access (as with DIRECT)
+   \item Arbitrary record lengths (as with SEQUENTIAL)
+   \end{itemize}
+\item Disadvantages:
+   \begin{itemize}
+   \item Presumably poorer performance than both DIRECT and SEQUENTIAL
+   \item Lack of record separators increases risk of inability to read 
+         file under small changes.
+   \item Index for positioning within file might be less natural than those for DIRECT.
+   \end{itemize}
+\end{itemize}
 
-% --- Slide ---
+}
 
-\begin{frame}{Motivation}
+\frame[containsverbatim]{
+  \frametitle{Steam I/O - 2}
+
+\begin{semiverbatim}
+\begin{lstlisting}
+OPEN(unit, ACCESS = ‘STREAM’) 
+! both formatted and unformatted files
+
+READ(unit, POS=n) x,y,z 
+! File starts at position POS=1
+! Position is specified in “file storage units” -
+!     usually bytes
+
+INQUIRE(unit, POS=currentPosition , ...)
+! Formatted I/O must use POS obtained from INQUIRE()
+!       (or POS=1)
+\end{lstlisting}
+\end{semiverbatim}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Examples}
+  Check the files:
+  \begin{itemize}
+  \item \textit{writeUstream.F90}
+  \item \textit{readUstream.F90}
+  \end{itemize}
+ }
+
+\frame[containsverbatim]{
+  \frametitle{Asynchronous I/O - 1}
+Potential performance enhancement allowing some I/O
+operations to be performed
+in parallel with other computations.
+\begin{itemize}
+\item To open a file for asynchronous operations, the new
+      optional keyword \textbf{ASYNCHRONOUS} is used.
+\item An asynchronous read/write operation is initiated with the
+      same keyword.
+\item An optional keyword, \textbf{ID}, can be used to return a handle for
+      later use in identifying specific pending operations
+\end{itemize}
+}
+
+\frame[containsverbatim]{   
+  \frametitle{Asynchronous I/O - 2}
+
+\begin{semiverbatim}
+\begin{lstlisting}
+OPEN(10, ..., ASYNCHRONOUS=’yes’)
+WRITE(10,..., id=id, ASYNCHRONOUS=’yes’) A
+CALL do_something(....) ! Not involving A here 
+WAIT(10, id=id) ! Blocks here until A has been written 
+CALL do_something(...) ! OK to use A here
+\end{lstlisting}
+\end{semiverbatim}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Asynchronous I/O - 3}
+If the asynchronous file access is performed in a procedure 
+other than the one called for OPEN, the data involved has to be 
+declared with ”asynchronous” attribute
+
+{\small
+\begin{semiverbatim}
+\begin{lstlisting}
+OPEN(10, ..., asynchronous=’yes’) 
+CALL async_write(10, A, id)
+CALL do_something_else_here() 
+WAIT(10, id=id)
+  ...
+SUBROUTINE async_write(iu, data, id)
+  INTEGER, INTENT(IN) :: iu
+  INTEGER, INTENT(IN), DIMENSION(:), ASYNCHRONOUS :: data 
+  INTEGER, INTENT(OUT) :: id
+  ...
+  WRITE(iu, id=id, asynchronous=’yes’) data
+  ...
+END SUBROUTINE async_write
+\end{lstlisting}
+\end{semiverbatim}
+}
+}
+
+\frame[containsverbatim]{
+  \frametitle{Asynchronous I/O - 4}
+An alternative for calling \textbf{WAIT} is to periodically 
+call \textbf{INQUIRE} to check the status of the operation 
+and in the meantime keep on doing something else
+
+{\small
+\begin{semiverbatim}
+\begin{lstlisting}
+LOGICAL :: status
+...
+OPEN(10, ..., asynchronous=’yes’) 
+WRITE(10,..., id=id, asynchronous=’yes’) A 
+DO WHILE (!status)
+   CALL do_something(....) ! Not involving A
+   INQUIRE (10, id=id, pending=status) 
+END DO
+\end{lstlisting}
+\end{semiverbatim}
+}
+}
 
 
-\end{frame}
+\frame[containsverbatim]{
+  \frametitle{Exercises}
+  Edit the file \textit{exampleAsyncIO.F90} to:
+  \begin{itemize}
+  \item Write the ''regular version''  (without using asynchronize I/O)
+    of the routine \textit{doingAsyncIO}. You can call the new routine \textit{notDoingAsyncIO}.
+  \item Time the four calls to \textit{validWrite},
+    \textit{invalidWrite}, \textit{doingAsyncIO}, and \textit{notDoingAsyncIO}.
+  \end{itemize}
+ }
 
+% \frame[containsverbatim]{
+%   \frametitle{Introduction }
 
+% }
 
-% --- Slide
+% \frame[containsverbatim]{
+% \frametitle{Introduction }
+% \begin{semiverbatim}
+% \begin{lstlisting}
 
-\begin{frame}[fragile]
-\frametitle{Conclusion}
+% \end{lstlisting}
+% \end{semiverbatim}
 
-\end{frame}
+% }
 
 \end{document}

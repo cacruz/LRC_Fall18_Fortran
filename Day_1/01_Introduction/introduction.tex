@@ -100,7 +100,7 @@ keepspaces,
   {\signed{\usebox\mybox}\end{quote}}
   
 % items enclosed in square brackets are optional; explanation below
-\title{Introduction and Setup}
+\title{Introduction}
 %\subtitle{Introduction}
 \author{Carlos Cruz}
 \institute{
@@ -145,42 +145,50 @@ Members of the Advanced Software Technology Group (ASTG) Code 606, NASA GSFC:
         \textbf{Day 1}
 
     \begin{itemize}
-        \item Introduction
-        \item Variables and data types
+        \item \textcolor{red}{Introduction}
+        \item \textcolor{blue}{Variables and data types
         \item Conditionals and loops
         \item Array concepts
         \item Subroutines and functions
         \item Modules and interfaces
-        \item File IO
+        \item File IO}
     \end{itemize}
   \end{column}
   \begin{column}{0.48\textwidth}
     \textbf{Day 2}
 
     \begin{itemize}
-        \item Derived types and pointers
-        \item Introduction to OOP
+        \item \textcolor{blue}{Derived types and pointers}
+        \item \textcolor{green}{Introduction to OOP
         \item IO Enhancements
         \item Inheritance
         \item Polymorphism
         \item Miscellaneous items
-        \item Interoperability with C
+        \item Interoperability with C}
     \end{itemize}
   \end{column}
 \end{columns}
+
+\begin{center}
+\textcolor{blue}{Introduction to Fortran 90}\\
+\textcolor{green}{Introduction to Fortran 2003}
+\end{center}
 
 \end{frame}
 
 % --- Slide
 
-\begin{frame}{Agenda}
+\begin{frame}{Introduction}
 
-\textcolor{red}{Introduction}
     \begin{itemize}
         \item History of Fortran
-        \item Why Fortran?
-        \item Fortran Compilers
-        \item Building Projects - Makefile
+        \item Why Learn Fortran?
+        \item Basic of Source Code
+        \item Building fortran programs
+    	\begin{itemize}
+        		\item Compilers
+        		\item Makefiles
+   	 \end{itemize}
     \end{itemize}
  
 \end{frame}
@@ -273,11 +281,8 @@ Members of the Advanced Software Technology Group (ASTG) Code 606, NASA GSFC:
 \begin{frame}{A Brief History of Fortran}
 
 
-
-  \parindent0em
-
-
-\begin{multicols}{2}[\columnsep2em] 
+\begin{columns}
+  \begin{column}{0.48\textwidth}
 
 \begin{itemize}
    
@@ -287,7 +292,6 @@ Members of the Advanced Software Technology Group (ASTG) Code 606, NASA GSFC:
   \item Major revision with many new features including; OO capabilities, procedure pointers, IEEE arithmetic, C interoperability
   }
   \end{itemize}
-  
   \item Fortran 2008 (latest \emph{stable} release)
   \begin{itemize}
   \scriptsize{
@@ -296,21 +300,17 @@ Members of the Advanced Software Technology Group (ASTG) Code 606, NASA GSFC:
   \end{itemize}
 \end{itemize}
 
-  
-    \begin{figure}[t]
+  \end{column}
+  \begin{column}{0.48\textwidth}
+
+\begin{figure}[t]
 \centering
-\includegraphics[scale=.25]{../../shared/oop.jpg}
+\includegraphics[scale=.3]{../../shared/oop.png}
 \end{figure}
   
-  
 
-
-\columnbreak
-
-\end{multicols}
-
-
-
+  \end{column}
+\end{columns}
 
 \end{frame}
 
@@ -327,7 +327,6 @@ Members of the Advanced Software Technology Group (ASTG) Code 606, NASA GSFC:
  \item modeling of stars and galaxies
  \end{itemize}
  \item Many dense linear algebra libraries developed in Fortran, e.g. BLAS, LAPACK, Scalapack.
- \item Some R and Python linear algebra kernels are written in Fortran.
 \end{itemize}
 
 Fortran continues and will continue to be a dominant language for large scale simulation of 
@@ -367,6 +366,11 @@ Unique benefits:
  \item It is a language that has been designed exclusively for numerical computation and has applications only in computational science and engineering.
  \end{itemize}
  \end{itemize}
+% Other reasons:
+% generic names for procedures, op args
+% recursive proc, op overloading
+% struct data or deriv types
+% oop
 
 \end{frame}
 
@@ -374,12 +378,114 @@ Unique benefits:
 \begin{frame}[fragile]
 \frametitle{}
 
+\begin{center}
+\huge{
+General Structure of Fortran Programs
+}
+\end{center}
 
-\centering{
+\end{frame}
+
+% --- Slide ---
+
+\begin{frame}{Source Code}
+
+\begin{itemize}
+\item Fortran source code is in ASCII text that can be written in any plain-text editor
+\begin{itemize}
+	\item Use a good editor, e.g. vim or emacs - both are capable of syntax highlighting.
+\end{itemize}
+\item Fortran source code is \textbf{case insensitive}, i.e. \emph{X} is the same \emph{x}
+\item Use uppercase letters for Fortran keywords ... or not
+\begin{itemize}
+	\item Use one convention and be consistent. 
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Basic Program Structure}
+
+ \footnotesize{The general structure of a Fortran \textbf{program} is as follows:}
+\begin{columns}
+ \begin{column}{0.48\textwidth}
+ \footnotesize{
+\FortranStyle
+ \begin{lstlisting}[style=Fortran]
+! keyword PROGRAM
+PROGRAM program_name 
+!  All variable MUST be declared
+IMPLICIT NONE
+! Variable declarations
+ ...   type declarations 
+! Main program
+ ...    Fortran statements here
+! subprograms
+ ...    optional subprogram units
+END PROGRAM
+\end{lstlisting}
+}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+\begin{figure}[t]
+\centering
+\includegraphics[scale=.3]{../../shared/main}
+\end{figure}
+
+  \end{column}
+\end{columns}
+
+ \footnotesize{The unit containing the PROGRAM attribute is often called the \textbf{main program} or \textbf{main}.}
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Hello World!}
+
+\FortranStyle
+
+hello.F90:
+ \begin{lstlisting}[style=Fortran]
+program hello
+! A simple hello world program
+   print *,"Hello World!"
+end program
+\end{lstlisting}
+
+The standard extension for Fortran source files is .f90, i.e., the
+source files are named $<$name$>$.f90. But:
+\scriptsize{
+\begin{itemize}
+\item FORTRAN77:
+\begin{itemize}
+	\item .f   $\leftarrow$ \emph{fixed-form} source code
+\end{itemize}
+\item Fortran90 and later:
+\begin{itemize}
+	\item * .F $\leftarrow$ \emph{fixed or free form} source code that must be preprocessed
+	\item * .F90 $\leftarrow$ \emph{free form} source code that must be preprocessed
+\end{itemize}
+\end{itemize}
+}
+
+\end{frame}
+
+
+% --- Slide ---
+\begin{frame}[fragile]
+\frametitle{}
+
+
+\begin{center}
 \huge{
 Compiling, Linking and Running Fortran Programs
 }
-}
+\end{center}
+
 
 \end{frame}
 
@@ -390,9 +496,10 @@ Compiling, Linking and Running Fortran Programs
 \begin{frame}[fragile]
 \frametitle{Compilers}
 
-You will need a \textbf{compiler} to produce an executable from Fortran code so that you can...well...execute the program. So, what is a \textbf{compiler}?
+To execute a Fortran program, you need to \textbf{compile} it to obtain an executable.
+
 \vfill
-A compiler is a \textbf{program} that translates source code written in some high-level language - like Fortran - into low-level machine code. The machine code is generally specific to the computer architecture where it was compiled.
+A \textbf{compiler} is a program that translates source code written in some high-level language - like Fortran - into low-level machine code. The machine code is generally specific to the computer architecture where it was compiled.
 
 % refers to the processing of source code files
 %and the creation of an 'object' file
@@ -470,63 +577,6 @@ GNU Fortran is a part of GCC, the \emph{GNU Compiler Collection}.
 
 \end{frame}
 
-
-% --- Slide
-
-\begin{frame}[fragile]
-\frametitle{Basic Program Structure}
-
-\FortranStyle
-
- \begin{lstlisting}[style=Fortran]
-PROGRAM program_name ! <--- stand-alone program
-IMPLICIT NONE ! <--- all variable MUST be declared
-! Variable declarations
-! ...
-! Main program
-! ...
-STOP ! <--- stops execution of the program
-END PROGRAM
-\end{lstlisting}
-
-\end{frame}
-
-% --- Slide
-
-\begin{frame}[fragile]
-\frametitle{Digression: file extensions}
-
-\begin{itemize}
-\item FORTRAN77:
-\begin{itemize}
-\item .f   $\leftarrow$ \emph{fixed-form} source code
-\item Executable code between lines 7-72
-\end{itemize}
-\item Fortran90 and later:
-\begin{itemize}
-\item .f90     $\leftarrow$ \emph{free-form} source code
-\end{itemize}
-\item * .F $\leftarrow$ \emph{fixed or free form} source code that must be preprocessed
-\item * .F90 $\leftarrow$ \emph{free form} source code that must be preprocessed
-\end{itemize}
-
-\end{frame}
-
-% --- Slide
-
-\begin{frame}[fragile]
-\frametitle{Hello World!}
-
-\FortranStyle
-
-hello.F90:
- \begin{lstlisting}[style=Fortran]
-program hello
-print *,"Hello World!"
-end program
-\end{lstlisting}
-
-\end{frame}
 
 % --- Slide ---
 
@@ -627,7 +677,7 @@ Use \emph{gfortran} command:
 \begin{frame}[fragile]
 \frametitle{Libraries}
 
-After compilation we generally want to create a \emph{static} library. For that we use the program "ar" (stands for archiver) as follows:
+Generally, we will have many fortran files that, upon compilation, will produce many object files. It is often useful to combine the object files into a \emph{library}. To create a \emph{static} library we use the program "ar" (stands for archiver) as follows:
 \begin{Verbatim} 
 $ gfortran -c *.F90
 $ ar -r libmystatlib.a *.o
@@ -644,16 +694,16 @@ $ gfortran -shared -o libmydynlib.so *.o
 
 % --- Slide ---
 
-\begin{frame}[fragile]
-\frametitle{Linking}
-
-A linker takes several object files and libraries as input and produces one executable object file. Additionally,
-\begin{itemize}
-\item it resolves all external references
-\item it includes the operating system libraries, the language-specific libraries, and, maybe, user-created libraries. 
-\end{itemize}
-
-\end{frame}
+%\begin{frame}[fragile]
+%\frametitle{Linking}
+%
+%A linker takes several object files and libraries as input and produces one executable object file. Additionally,
+%\begin{itemize}
+%\item it resolves all external references
+%\item it includes the operating system libraries, the language-specific libraries, and, maybe, user-created libraries. 
+%\end{itemize}
+%
+%\end{frame}
 
 
 
