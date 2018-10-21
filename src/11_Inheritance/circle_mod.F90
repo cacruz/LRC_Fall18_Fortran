@@ -28,7 +28,7 @@ contains
    real function get_area( this )
       class(circle), intent(in) :: this
 
-      get_area =  PI * this%radius
+      get_area =  PI * this%radius**2
 
    end function get_area
 
