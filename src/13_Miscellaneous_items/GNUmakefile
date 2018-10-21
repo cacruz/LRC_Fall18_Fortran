@@ -1,7 +1,4 @@
-all: exercise.x examples.x
-
-exercise.x: exercise.F90
-	gfortran -o $@ $^
+all: examples.x
 
 examples.x: examples.F90
 	gfortran -o $@ $^
