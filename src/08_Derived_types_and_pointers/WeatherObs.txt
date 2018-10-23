@@ -1,4 +1,4 @@
- Temp K       Humidity     Precip       Wind m/s    WindDir
+ Temp K    Humidity     Precip       Wind m/s    WindDir
  296.73     0.0056      0.00000      3.10800       300 
  295.67     0.0056      0.00000      3.11300       250 
  295.04     0.0056      0.00000      2.82400       280 

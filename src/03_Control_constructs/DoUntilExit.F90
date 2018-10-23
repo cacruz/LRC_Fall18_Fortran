@@ -1,4 +1,4 @@
-program DoWhile
+program DoUntilExit
    implicit none
       
    integer :: dayOfYear = 0
@@ -11,13 +11,14 @@ program DoWhile
    call random_number(precip)   ! 365 random values between 0.0 and 1.0
    precip = .27 * precip
    
-   DO WHILE (totalPrecip < avgYearlyPrecip)
+   DO 
       dayOfYear = dayOfYear +1
       IF (dayOfYear > 365) THEN
          print *, 'Precip was below normal this year'
          STOP
       END IF
       totalPrecip = totalPrecip + precip(dayOfYear)
+      IF (totalPrecip > avgYearlyPrecip) EXIT
    END DO
    print *, 'Precip surpassed yearly average on day', dayOfYear
    
