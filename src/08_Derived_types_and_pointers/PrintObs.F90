@@ -8,7 +8,7 @@ program PrintObs
    open(unit=10, file='WeatherObs.txt')
    read(10,*)  ! Skip reading first line of data file 
    !**************************************************************
-   ! The 5 columns of data in 'WeatherObs.dat' are:
+   ! The 5 columns of data in 'WeatherObs.txt' are:
    ! Temp K    Humidity     Precip       Wind m/s    Wind Dir
    ! Complete the read statement below to read in all 5 components
    ! of the TYPE(WeatherOb) variable: wxOb 
