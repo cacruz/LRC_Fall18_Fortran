@@ -6,7 +6,7 @@
    real, dimension(5) :: x = [1., 2., 3., 4. ,5.]
    real, parameter :: pi = 9801./(1103*sqrt(8.))
    integer :: nx, ny
-   complex :: C = (0.0,pi)
+   complex :: C = (1.0, pi)
    integer(int64) :: count_rate, count_max
    
    print *, 'Number of args: ',command_argument_count()  
@@ -14,21 +14,21 @@
    call get_command_argument(2, VALUE=arg2) 
    read(arg1,'(i2)') nx
    read(arg2,'(i2)') ny
-   print *,'------------------------------------------------------------'   
-   print *, 'User input: nx = ',nx,' ny = ',ny   
-   print *,'------------------------------------------------------------'
+   write(*,*) repeat('-', 60)
+   write(6,'(1x,a,i2,a,i2)') 'User input: nx = ',nx,' ny = ',ny   
+   write(*,*) repeat('-', 60)
    call get_environment_variable('SHELL', myShell)
-   print *,'Value of SHELL: ',trim(myShell)
-   print *,'------------------------------------------------------------'
-   print *, 'ISO_FORTRAN_ENV constants IO units: ',INPUT_UNIT, &
+   write(6,*)'Value of SHELL: ',trim(myShell)
+   write(*,*) repeat('-', 60)
+   write(6,'(1x,a,3(i5))')'ISO_FORTRAN_ENV constants IO units: ',INPUT_UNIT, &
         OUTPUT_UNIT, ERROR_UNIT 
-   print *, 'ISO_FORTRAN_ENV size constants: ',NUMERIC_STORAGE_SIZE, &
+   write(6,'(1x,a,3(i5))')'ISO_FORTRAN_ENV size constants: ',NUMERIC_STORAGE_SIZE, &
         CHARACTER_STORAGE_SIZE, FILE_STORAGE_SIZE
-   print *,'------------------------------------------------------------'
-   print *, 'x: ',x
-   print *,'------------------------------------------------------------'   
-   print *,'complex C: ',C
-   print *,'------------------------------------------------------------'   
+   write(*,*) repeat('-', 60)
+   write(6,'(1x,a,5(1x,f4.2))')'x: ',x
+   write(*,*) repeat('-', 60)
+   write(6,"(1x,a,f0.0,sp,f12.7,'i')") 'complex C: ',C
+   write(*,*) repeat('-', 60)
    call system_clock(count_rate, count_max)
    print *, 'Clock resolution: ',real(count_max, real64) / count_rate
 
