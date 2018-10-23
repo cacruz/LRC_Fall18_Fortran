@@ -26,7 +26,7 @@
    A = 0
    print *
    print *, 'A after initialization: ', A
-   print *,'-------------------------------------------------'
+   write(6,*) repeat('-',50)
 
    
    C = 1
@@ -34,13 +34,13 @@
    B(-1:0,1:2) = C(1:2,2:3) + 1
    print *,'Array sections:'
    print *, 'B(-1:0,1:2) = C(1:2,2:3) + 1 : ', B
-   print *,'-------------------------------------------------'
+   write(6,*) repeat('-',50)
 
    D = 0.5
    B = C * D - B**2
    print *,'Array expressions:'
    print *, 'B = C * D - B**2 : ', B
-   print *,'-------------------------------------------------'
+   write(6,*) repeat('-',50)
 
    print *,'Array inquiries:'
    print *, 'Size A: ', size(A)
@@ -51,7 +51,7 @@
    print *, 'Shape C: ', shape(C)
    print *, 'LBOUND (B,1): ', lbound(B,1)
    print *, 'UBOUND (B,2): ', ubound(B,2)
-   print *,'-------------------------------------------------'
+   write(6,*) repeat('-',50)
 
    heights = (/5.10, 5.6, 4.0, 3.6/)
    colors = (/'RED  ','GREEN','BLUE '/)
@@ -60,12 +60,12 @@
 
    print *, 'colors: ',colors
    print *, 'ints: ',ints
-   print *,'-------------------------------------------------'
+   write(6,*) repeat('-',50)
 
    print *, 'Shape AA (used as source) ',shape(AA)
    CC = reshape(AA, (/5, 3/))
    print *, 'Re-shaped AA (assigned to CC) ',shape(CC)
-   print *,'-------------------------------------------------'
+   write(6,*) repeat('-',50)
 
    print *,'Allocatable arrays:'
 
@@ -76,20 +76,19 @@
    print *, 'is temperature allocated?: ', allocated(temperature)
    deallocate(temperature)
    print *, 'is temperature allocated?: ', allocated(temperature)
-   print *,'-------------------------------------------------'
 
    print *,'Masked array assignment'
    where ( ID /= 0 ) Y = X/ID
    print *,Y(1,1), Y(2,1)
    print *,Y(1,2), Y(2,2)
-   print *,'-------------------------------------------------'
+   write(6,*) repeat('-',50)
 
    print *,'Vector valued subscripts:'
    print *, 'A before init: ', A
    print *, 'V: ', V
    A(V) = 3.5
    print *, 'A(V): ', A
-   print *,'-------------------------------------------------'
+   write(6,*) repeat('-',50)
 
    print *,'Where construct:'
    g = reshape( (/ 1.,0.,3.,0.,5.,0. /), shape(g))
