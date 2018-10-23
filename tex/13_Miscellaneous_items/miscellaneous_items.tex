@@ -273,7 +273,8 @@ ASSOCIATE ( R=>gas_constant, T => temp, P=>press, V=>vol)
 END ASSOCIATE
 
 ASSOCIATE ( Z => EXP(-(X**2+Y**2)) * COS(THETA) ) 
-    Y = A*ZEND ASSOCIATE
+    Y = A*Z
+END ASSOCIATE
 \end{lstlisting}
 }
 \end{frame}
@@ -308,8 +309,10 @@ The intrinsic subroutine MOVE\_ALLOC(FROM,TO) has been introduced to move an all
 \FortranStyle
 \begin{lstlisting}[style=Fortran]
 REAL,ALLOCATABLE :: GRID(:),TEMPGRID(:)
-...ALLOCATE(GRID(-N:N) ! initial allocation of GRID 
-...ALLOCATE(TEMPGRID(-2*N:2*N)) ! allocate bigger grid 
+...
+ALLOCATE(GRID(-N:N) ! initial allocation of GRID 
+...
+ALLOCATE(TEMPGRID(-2*N:2*N)) ! allocate bigger grid 
 TEMPGRID(::2) = GRID ! distribute values to new locations 
 CALL MOVE_ALLOC(TO=GRID,FROM=TEMPGRID)
 \end{lstlisting}
@@ -321,7 +324,8 @@ MOVE\_ALLOC provides a reallocation facility that avoids the problem that has be
 
 \begin{frame}[fragile]
 \frametitle{SELECT TYPE construct}
-\footnotesize{
+
+\footnotesize{
 The SELECT TYPE construct selects for execution at most one of its constituent blocks, depending on the dynamic type of a variable or an expression, known as the 'selector'. 
 \FortranStyle
 \begin{lstlisting}[style=Fortran]
@@ -349,7 +353,7 @@ END SELECT
 \frametitle{IMPORT statement}
 
 \scriptsize{
-A common pitfall when using F90/F95 is the declaration of an interface block than needs to "use" a derived type defined in the same module:
+A common pitfall when using F90/F95 is the declaration of an interface block that needs to "use" a derived type defined in the same module:
 \FortranStyle
 \begin{lstlisting}[style=Fortran]
 module foo
@@ -475,7 +479,7 @@ Named constants may be used to specify real or imaginary parts of a complex cons
  \FortranStyle
 \begin{lstlisting}[style=Fortran]
 REAL, PARAMETER :: pi = 3.1415926535897932384 
-COMPLEX :: C = (0.0,pi)
+COMPLEX :: C = (1.0, pi)
 \end{lstlisting}
 
 \end{frame}

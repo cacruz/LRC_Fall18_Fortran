@@ -187,6 +187,7 @@ B,C,D are conformable\\
 \begin{frame}[fragile]
 \frametitle{Array Declarations}
 
+\footnotesize{
 Literals and constants can be used in array declarations, 
   \FortranStyle
 \begin{lstlisting}[style=Fortran]
@@ -204,8 +205,9 @@ Literals and constants can be used in array declarations,
 \item Default lower bound is 1
 \item Bounds can begin and end anywhere
 \item Arrays can be zero-sized
+\item Up to 7 dimensions
 \end{itemize}
- 
+ }
 \end{frame}
 
 % --- Slide
@@ -289,7 +291,7 @@ Arrays can be treated like a single variable in that:
 An array can be subscripted by a \emph{subscript-triplet} giving rise to a sub-array of the original. The general form is: \\
 \quad \quad \emph{(start:end:stride)} \\
 
-the section starts at \emph{start} and ends at ot before \emph{end}.\emph{stride}  is the increment by which the locations are selected. \\
+the section starts at \emph{start} and ends at or before \emph{end}.\emph{stride}  is the increment by which the locations are selected. \\
 \emph{start, end, stride} must all be scalar integer expressions. Thus, these are all valid:
   \FortranStyle
 \begin{lstlisting}[style=Fortran]
@@ -297,7 +299,7 @@ the section starts at \emph{start} and ends at ot before \emph{end}.\emph{stride
 	A(m:n:k) = 0   ! m to n step k
 	A(8:3:-1) = 0  ! 8 to 3 backwards
 	A(8:3) = 2     ! step 1 => zero size
-	A(M::4) = 1    ! default UPB, step 4
+	A(m::4) = 1    ! default UPB, step 4
 	A(::2) = 1.0   ! default LWB and UPB
 	A(m**2:n*k/3) = 1.0
 \end{lstlisting}
@@ -385,6 +387,27 @@ Used to give arrays or sections of arrays specific values. For example,
 
 % --- Slide
 \begin{frame}[fragile]
+\frametitle{Array Constructors in Initialization Statements}
+
+\footnotesize{
+Named array constants can be created
+\FortranStyle
+ \begin{lstlisting}[style=Fortran]
+integer, dimension(3), parameter :: &
+    unit_vec = (/1,1,1/)
+character(len=*), dimension(3),  parameter :: &
+    lights =  (/'red  ','blue ','green'/)
+real, dimension(3,3), parameter :: &
+    unit_matrix = reshape( &  ! using reshape
+    (/1,0,0,0,1,0,0,0,1/),(/3,3/))
+\end{lstlisting}
+ In the second statement all strings must be same length. 
+}
+
+\end{frame}
+
+% --- Slide
+\begin{frame}[fragile]
 \frametitle{RESHAPE}
 
 \footnotesize{
@@ -428,27 +451,6 @@ DATA (c(i),i=1,10,2) /5*1/
 DATA (c(i),i=2,10,2) /5*2/
 \end{lstlisting}
 }
-\end{frame}
-
-% --- Slide
-\begin{frame}[fragile]
-\frametitle{Array Constructors in Initialization Statements}
-
-\footnotesize{
-Named array constants can be created
-\FortranStyle
- \begin{lstlisting}[style=Fortran]
-integer, dimension(3), parameter :: &
-    unit_vec = (/1,1,1/)
-character(len=*), dimension(3),  parameter :: &
-    lights =  (/'red  ','blue ','green'/)
-real, dimension(3,3), parameter :: &
-    unit_matrix = reshape( &
-    (/1,0,0,0,1,0,0,0,1/),(/3,3/))
-\end{lstlisting}
- In the second statement all strings must be same length. 
-}
-
 \end{frame}
 
 % --- Slide
@@ -607,6 +609,23 @@ A 1D array can be used to subscript an array in a dimension. Consider
     A(1) = SUM(C(V,W))
  \end{lstlisting}
  \end{itemize}
+}
+
+\end{frame}
+
+
+% --- Slide
+
+\begin{frame}[fragile]
+\frametitle{Conclusion}
+
+Arrays make Fortran a very powerful language, especially for computationally intensive program development.
+\scriptsize{
+\begin{itemize}
+\item Array syntax allows easy (intuitive) initialization
+\item Dynamic memory allocation enables customizable sizing of arrays
+\item Many array intrinsic functions (most not discussed here)
+\end{itemize}
 }
 
 \end{frame}

@@ -1,0 +1,1 @@
+ssh -i "fortranlrc.pem" <student>@ec2-18-217-60-67.us-east-2.compute.amazonaws.com

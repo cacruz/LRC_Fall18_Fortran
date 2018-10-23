@@ -197,20 +197,20 @@ If Git is not available or Git is not working then, in your browser open \url{ht
 
 \footnotesize{Open a terminal (Linux/Mac) or command prompt (Windows) and go into the LRC\_Fall18\_Fortran directory/amazon (what you just downloaded):}
 
-\scriptsize{
+\tiny{
 \begin{Verbatim} 
 cd LRC_Fall18_Fortran/amazon
-ssh -i "<file>.pem" <student>@<url>
+ssh -i "fortranlrc.pem" <student>@ec2-18-217-60-67.us-east-2.compute.amazonaws.com
 
 substitute <student> for your assigned userid
 \end{Verbatim}
 }
-\footnotesize{Then, in your Amazon account:}
+\footnotesize{If your ssh command is successful then get the Fortran code in your Amazon account:}
 \scriptsize{
 \begin{Verbatim} 
-git clone https://github.com/cacruz/LRC_Fall18_Fortran_src.git
-cd LRC_Fall18_Fortran_src/src
-ls
+$ git clone https://github.com/cacruz/LRC_Fall18_Fortran.git
+$ cd LRC_Fall18_Fortran/src
+$ ls
 01_Introduction
 02_Data_types
 03_Control_constructs
@@ -218,7 +218,9 @@ ls
 etc...
 \end{Verbatim}
 }
-
+\begin{center}
+\textbf{If possible, leave terminal -with ssh connection- open for the rest of the day.}
+\end{center}
 \end{frame}
 
 
