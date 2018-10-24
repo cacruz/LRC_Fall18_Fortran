@@ -142,6 +142,32 @@ keepspaces,
 % --- Slide
 
 \begin{frame}[fragile]
+\frametitle{Array Declarations}
+
+\footnotesize{
+ \begin{itemize}
+\item Default lower bound is 1
+\item Bounds can begin and end anywhere
+\item Arrays can be zero-sized
+\item Up to 7 dimensions
+\end{itemize}
+  \FortranStyle
+\begin{lstlisting}[style=Fortran]
+    real, dimension(15)       :: A ! static arrays
+    real, dimension(-4:0,0:2) :: B
+    real F(360,180) 
+    integer, dimension(20)    :: N
+    
+    integer, parameter :: UB = 5 ! Literals and constants can
+    real, dimension(0:UB-1)   :: Y ! be used in array 
+    real, dimension(1+UB*UB,10) :: Z ! declarations
+\end{lstlisting}
+ }
+\end{frame}
+
+% --- Slide
+
+\begin{frame}[fragile]
 \frametitle{Array Terminology}
 
 \begin{columns}
@@ -180,34 +206,6 @@ B,C,D are conformable\\
 \end{columns}
 \bigskip
  
-\end{frame}
-
-% --- Slide
-
-\begin{frame}[fragile]
-\frametitle{Array Declarations}
-
-\footnotesize{
-Literals and constants can be used in array declarations, 
-  \FortranStyle
-\begin{lstlisting}[style=Fortran]
-    real, dimension(15)       :: A ! static arrays
-    real, dimension(-4:0,0:2) :: B
-    
-    integer, dimension(20)    :: N
-    
-    integer, parameter :: UB = 5
-    real, dimension(0:UB-1)   :: Y
-    real, dimension(1+UB*UB,10) :: Z
-\end{lstlisting}
-
-\begin{itemize}
-\item Default lower bound is 1
-\item Bounds can begin and end anywhere
-\item Arrays can be zero-sized
-\item Up to 7 dimensions
-\end{itemize}
- }
 \end{frame}
 
 % --- Slide
