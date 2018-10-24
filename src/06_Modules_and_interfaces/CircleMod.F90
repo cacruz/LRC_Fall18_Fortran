@@ -3,7 +3,7 @@ module CircleMod
  
    private
    public  areaCircle, setRadius
-   real, parameter :: PI = 3.1515927
+   real, parameter :: PI = 3.1415927
    real :: radius
 
 CONTAINS
