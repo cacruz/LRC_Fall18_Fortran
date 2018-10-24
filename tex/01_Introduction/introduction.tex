@@ -130,8 +130,8 @@ keepspaces,
     \begin{itemize}
         \item History of Fortran
         \item Why Learn Fortran?
-        \item Basic of Source Code
-        \item Building fortran programs
+        \item First Look at Source Code
+        \item Building Fortran Programs
     	\begin{itemize}
         		\item Compilers
         		\item Makefiles
@@ -343,10 +343,6 @@ General Structure of Fortran Programs
 	\item Use a good editor, e.g. vim or emacs - both are capable of syntax highlighting.
 \end{itemize}
 \item Fortran source code is \textbf{case insensitive}, i.e. \emph{X} is the same \emph{x}
-\item Use uppercase letters for Fortran keywords ... or not
-\begin{itemize}
-	\item Use one convention and be consistent. 
-\end{itemize}
 \end{itemize}
 
 \end{frame}
@@ -489,26 +485,6 @@ How does a compiler translate source code into executable code?
 
 % --- Slide
 
-%\begin{frame}{Compilation and Linking}
-%
-%\begin{itemize}
-%\item Compilation refers to the processing of source code files and the creation of an 'object' file
-%which contains the machine language instructions that correspond to the source code file.
-%\begin{itemize}
-%\item Compiler errors are usually syntactic in nature.
-% \end{itemize}
-%
-%\item Linking refers to the creation of a single executable file from one or multiple object files
-%\begin{itemize}
-%\item Linking errors usually have to do with missing or multiple definitions.
-% \end{itemize}
-%
-% \end{itemize}
-%
-%\end{frame}
-
-% --- Slide
-
 \begin{frame}{The GNU Fortran compiler}
 
 The GNU Fortran compiler supports the Fortran 77, 90 and 95 standards completely, parts
@@ -636,39 +612,6 @@ $ gfortran -shared -o libmydynlib.so *.o
 \end{Verbatim}
 
 \end{frame}
-
-
-
-% --- Slide ---
-
-%\begin{frame}[fragile]
-%\frametitle{Linking}
-%
-%A linker takes several object files and libraries as input and produces one executable object file. Additionally,
-%\begin{itemize}
-%\item it resolves all external references
-%\item it includes the operating system libraries, the language-specific libraries, and, maybe, user-created libraries. 
-%\end{itemize}
-%
-%\end{frame}
-
-
-
-
-%% --- Slide ---
-%
-%\begin{frame}[fragile]
-%\frametitle{Linking libraries}
-%
-%\begin{itemize}
-%\item Static and dynamic linking
-%\begin{itemize}
-%\item Static - performed by linker
-%\item Dynamic - performed by OS
-%\end{itemize}
-%\end{itemize}
-%
-%\end{frame}
 
 % --- Slide ---
 
