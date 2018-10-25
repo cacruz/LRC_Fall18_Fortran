@@ -5,8 +5,15 @@ program GenericSwap
 
    !Add the proper generic interface block below to enable this code
    interface swap
+      subroutine swap_i(a, b)
+        implicit none
+        integer, intent (inout) :: a, b
+     end subroutine swap_i
 
-
+     subroutine swap_c(a, b)
+       implicit none
+       character, intent (inout) :: a, b
+     end subroutine swap_c
    end interface
 
    i = 1   
