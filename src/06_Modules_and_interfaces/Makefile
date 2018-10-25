@@ -1,9 +1,14 @@
-BIN=CircleOperations.exe
-SRCS:=$(wildcard *.F90)
-OBJS:=$(addsuffix .o, $(basename $(SRCS)))
-$(BIN): $(OBJS)
-	gfortran $^ -o $@
-%.o: %.F90
-	gfortran -c $^
+all: circle.x swap2.x
+
+%.o %.mod: %.F90
+	gfortran -c $<
+
+circle.x: CircleMod.o CircleOperations.o
+	gfortran -o $@ $^
+
+swap2.x: GenericSwap2.F90
+	gfortran -o $@ $^
+
+.PHONY: clean
 clean:
-	rm -f $(OBJS) $(BIN)
+	rm -f *.mod *.o *.x
