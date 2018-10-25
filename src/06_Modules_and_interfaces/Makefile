@@ -1,9 +1,22 @@
-BIN=CircleOperations.exe
+all: CircleOperations.exe GenericSwap.exe  swap2.exe swapProgram.exe
+
 SRCS:=$(wildcard *.F90)
 OBJS:=$(addsuffix .o, $(basename $(SRCS)))
-$(BIN): $(OBJS)
+
+CircleOperations.exe: CircleMod.o CircleOperations.o
 	gfortran $^ -o $@
+
+GenericSwap.exe: GenericSwap.o
+	gfortran $^ -o $@
+
+swap2.exe: GenericSwap2.o
+	gfortran -o $@ $^
+
+swapProgram.exe: swapMod.o swapProgram.o
+	gfortran $^ -o $@
+
 %.o: %.F90
 	gfortran -c $^
+
 clean:
-	rm -f $(OBJS) $(BIN)
+	rm -f *.o *.mod *.exe 
