@@ -9,7 +9,7 @@ CircleOperations.exe: CircleMod.o CircleOperations.o
 GenericSwap.exe: GenericSwap.o
 	gfortran $^ -o $@
 
-swap2.x: GenericSwap2.F90
+swap2.exe: GenericSwap2.o
 	gfortran -o $@ $^
 
 swapProgram.exe: swapMod.o swapProgram.o
